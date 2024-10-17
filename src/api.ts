@@ -105,9 +105,6 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
   }
 }
 
-// Note: The API doesn't provide creation date, followers count, or other details not present in the response.
-// If these are needed, you may need to look for alternative API endpoints or methods to retrieve this information.
-
 export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem> {
   try {
     const response = await axios.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });

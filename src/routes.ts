@@ -5,6 +5,7 @@ import {
   fetchRobloxFollowers, 
   fetchRobloxAvatar,
   fetchRobloxGroupData,
+  fetchCatalogItemData,
   fetchBundleData,
   createErrorMetaTags
 } from './api';
@@ -148,40 +149,71 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   }
 });
 
-// Update the catalog route to display "coming soon" message
 router.get('/catalog/:itemId/:itemName', async (req, res) => {
   const { itemId, itemName } = req.params;
 
-  const metaTags = `
-    <meta property="og:title" content="Roblox Catalog Item">
-    <meta property="og:description" content="Catalog items coming soon!">
-    <meta property="og:image" content="https://rxblox.com/coming-soon-image.png">
-    <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${itemName}">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Roblox Catalog Item">
-    <meta name="twitter:description" content="Catalog items coming soon!">
-    <meta name="twitter:image" content="https://rxblox.com/coming-soon-image.png">
-  `;
+  try {
+    const itemData = await fetchCatalogItemData(itemId);
 
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Roblox Catalog items coming soon</title>
-      ${metaTags}
-    </head>
-    <body>
-      <h1>Roblox Catalog items coming soon</h1>
-      <script>
-        window.location.href = "https://www.roblox.com/catalog/${itemId}/${itemName}";
-      </script>
-    </body>
-    </html>
-  `;
+    // Check if the provided itemName matches the fetched data
+    const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
+    if (itemName !== encodedItemName) {
+      return res.redirect(`/catalog/${itemId}/${encodedItemName}`);
+    }
 
-  res.send(html);
+    const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
+
+    const metaTags = `
+      <meta property="og:title" content="${itemData.name}">
+      <meta property="og:description" content="${itemData.description || 'No description available'}">
+      <meta property="og:image" content="${itemIconUrl}">
+      <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${encodedItemName}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${itemData.name}">
+      <meta name="twitter:description" content="${itemData.description || 'No description available'}">
+      <meta name="twitter:image" content="${itemIconUrl}">
+      <meta name="roblox:item:price" content="${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}">
+      <meta name="roblox:item:type" content="${itemData.assetType}">
+      <meta name="roblox:item:limited" content="${itemData.isLimited ? 'Yes' : 'No'}">
+    `;
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${itemData.name} - Roblox Catalog Item</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "https://www.roblox.com/catalog/${itemId}/${encodedItemName}";
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error fetching Roblox catalog item data:', error);
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Item Not Found</title>
+        ${createErrorMetaTags('The requested Roblox item could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Item Not Found</h1>
+        <p>The requested Roblox item could not be found.</p>
+      </body>
+      </html>
+    `;
+    res.status(404).send(errorHtml);
+  }
 });
 
 router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
