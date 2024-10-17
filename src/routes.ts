@@ -110,19 +110,14 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
 
     const groupIconUrl = `https://i.pinimg.com/736x/7e/a1/65/7ea165670bc9c0844337266b454e6a02.jpg`;  // Replace with actual group icon URL if available
 
-    const description = `
-        Members: ${groupData.memberCount} | Owner: ${groupData.owner.displayName} (@${groupData.owner.username})
-        ${groupData.description || 'No description available'}
-    `;
-
     const metaTags = `
       <meta property="og:title" content="${groupData.name}">
-      <meta property="og:description" content="${description}">
+      <meta property="og:description" content="${groupData.description || 'No description available'}">
       <meta property="og:image" content="${groupIconUrl}">
       <meta property="og:url" content="https://www.roblox.com/groups/${groupId}/${groupName}">
       <meta name="twitter:card" content="summary">
       <meta name="twitter:title" content="${groupData.name}">
-      <meta name="twitter:description" content="${description}">
+      <meta name="twitter:description" content="${groupData.description || 'No description available'}">
       <meta name="twitter:image" content="${groupIconUrl}">
       <meta name="roblox:group:members" content="${groupData.memberCount}">
       <meta name="roblox:group:owner" content="${groupData.owner.displayName} (@${groupData.owner.username})">
