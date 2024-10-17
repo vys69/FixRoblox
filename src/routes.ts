@@ -92,10 +92,7 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   let groupName = req.params.groupName || '';
 
   try {
-    const [groupData, memberCount] = await Promise.all([
-      fetchRobloxGroupData(groupId),
-      fetchRobloxGroupMemberCount(groupId)
-    ]);
+    const groupData = await fetchRobloxGroupData(groupId);
 
     // If groupName wasn't provided in the URL or doesn't match, use the fetched name
     if (!groupName || groupName !== encodeURIComponent(groupData.name.replace(/\s+/g, '-'))) {
@@ -113,7 +110,7 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
       <meta name="twitter:title" content="${groupData.name}">
       <meta name="twitter:description" content="${groupData.description || 'No description available'}">
       <meta name="twitter:image" content="${groupIconUrl}">
-      <meta name="roblox:group:members" content="${memberCount}">
+      <meta name="roblox:group:members" content="${groupData.memberCount}">
       <meta name="roblox:group:owner" content="${groupData.owner.displayName} (@${groupData.owner.username})">
     `;
 
