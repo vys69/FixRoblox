@@ -1,12 +1,5 @@
 import { Router } from 'express';
-import { 
-  fetchRobloxUserData, 
-  fetchRobloxFriends, 
-  fetchRobloxFollowers, 
-  fetchRobloxAvatar,
-  fetchRobloxGroupData,
-  fetchRobloxGroupMemberCount
-} from './api';
+import { fetchRobloxUserData, fetchRobloxFriends, fetchRobloxFollowers, fetchRobloxAvatar } from './api';
 
 const router = Router();
 
@@ -87,63 +80,5 @@ router.get('/users/:userId/profile', async (req, res) => {
   }
 });
 
-router.get('/test', (req, res) => {
-    res.send('Test route working');
-  });
-
-router.get('/ping', (req, res) => {
-    res.send('pong');
-  });
-
-router.get('/groups/:groupId/:groupName?', async (req, res) => {
-  const groupId = req.params.groupId;
-  let groupName = req.params.groupName || '';
-
-  try {
-    const groupData = await fetchRobloxGroupData(groupId);
-
-    // If groupName wasn't provided in the URL or doesn't match, use the fetched name
-    if (!groupName || groupName !== encodeURIComponent(groupData.name.replace(/\s+/g, '-'))) {
-      groupName = encodeURIComponent(groupData.name.replace(/\s+/g, '-'));
-    }
-
-    const groupIconUrl = `https://i.pinimg.com/736x/7e/a1/65/7ea165670bc9c0844337266b454e6a02.jpg`;  // Replace with actual group icon URL if available
-
-    const metaTags = `
-      <meta property="og:title" content="${groupData.name}">
-      <meta property="og:description" content="${groupData.description || 'No description available'}">
-      <meta property="og:image" content="${groupIconUrl}">
-      <meta property="og:url" content="https://www.roblox.com/groups/${groupId}/${groupName}">
-      <meta name="twitter:card" content="summary">
-      <meta name="twitter:title" content="${groupData.name}">
-      <meta name="twitter:description" content="${groupData.description || 'No description available'}">
-      <meta name="twitter:image" content="${groupIconUrl}">
-      <meta name="roblox:group:members" content="${groupData.memberCount}">
-      <meta name="roblox:group:owner" content="${groupData.owner.displayName} (@${groupData.owner.username})">
-    `;
-
-    const html = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${groupData.name} - Roblox Group</title>
-        ${metaTags}
-      </head>
-      <body>
-        <script>
-          window.location.href = "https://www.roblox.com/groups/${groupId}/${groupName}";
-        </script>
-      </body>
-      </html>
-    `;
-
-    res.send(html);
-  } catch (error) {
-    console.error('Error fetching Roblox group data:', error);
-    res.status(500).send('Error fetching Roblox group data');
-  }
-});
-
 export default router;
+
