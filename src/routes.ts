@@ -150,10 +150,10 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   }
 });
 
-router.get('/catalog/:itemId/:itemType?/:itemName?', async (req, res) => {
-  const { itemId, itemType, itemName } = req.params;
+router.get('/catalog/:itemId/:itemName/:itemType', async (req, res) => {
+  const { itemId, itemName, itemType } = req.params;
 
-  if (!itemType) {
+  if (itemType !== 'item' && itemType !== 'bundle') {
     const errorHtml = `
       <!DOCTYPE html>
       <html lang="en">
@@ -161,11 +161,11 @@ router.get('/catalog/:itemId/:itemType?/:itemName?', async (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Error - Invalid URL</title>
-        ${createErrorMetaTags('Invalid URL. Please specify /item or /bundle after the item ID.')}
+        ${createErrorMetaTags('Invalid URL. Please specify /item or /bundle at the end of the URL.')}
       </head>
       <body>
         <h1>Error: Invalid URL</h1>
-        <p>Please specify /item or /bundle after the item ID.</p>
+        <p>Please specify /item or /bundle at the end of the URL.</p>
       </body>
       </html>
     `;
@@ -176,16 +176,14 @@ router.get('/catalog/:itemId/:itemType?/:itemName?', async (req, res) => {
     let itemData;
     if (itemType === 'item') {
       itemData = await fetchCatalogItemData(itemId);
-    } else if (itemType === 'bundle') {
-      itemData = await fetchBundleData(itemId);
     } else {
-      throw new Error('Invalid item type. Use /item or /bundle.');
+      itemData = await fetchBundleData(itemId);
     }
 
-    // If itemName wasn't provided in the URL or doesn't match, use the fetched name
+    // Check if the provided itemName matches the fetched data
     const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
-    if (!itemName || itemName !== encodedItemName) {
-      return res.redirect(`/catalog/${itemId}/${itemType}/${encodedItemName}`);
+    if (itemName !== encodedItemName) {
+      return res.redirect(`/catalog/${itemId}/${encodedItemName}/${itemType}`);
     }
 
     const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
@@ -234,7 +232,22 @@ router.get('/catalog/:itemId/:itemType?/:itemName?', async (req, res) => {
     res.send(html);
   } catch (error) {
     console.error('Error fetching Roblox catalog item data:', error);
-    res.status(500).send('Error fetching Roblox catalog item data');
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Item Not Found</title>
+        ${createErrorMetaTags('The requested Roblox item could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Item Not Found</h1>
+        <p>The requested Roblox item could not be found.</p>
+      </body>
+      </html>
+    `;
+    res.status(404).send(errorHtml);
   }
 });
 
