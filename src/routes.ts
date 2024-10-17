@@ -150,8 +150,9 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   }
 });
 
-router.get('/catalog/:itemId/:itemName/:itemType', async (req, res) => {
-  const { itemId, itemName, itemType } = req.params;
+router.get('/catalog/:itemId/:itemName', async (req, res) => {
+  const { itemId, itemName } = req.params;
+  const itemType = req.query.type as string;
 
   if (itemType !== 'item' && itemType !== 'bundle') {
     const errorHtml = `
@@ -161,11 +162,11 @@ router.get('/catalog/:itemId/:itemName/:itemType', async (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Error - Invalid URL</title>
-        ${createErrorMetaTags('Invalid URL. Please specify /item or /bundle at the end of the URL.')}
+        ${createErrorMetaTags('Invalid URL. Please specify ?type=item or ?type=bundle in the URL.')}
       </head>
       <body>
         <h1>Error: Invalid URL</h1>
-        <p>Please specify /item or /bundle at the end of the URL.</p>
+        <p>Please specify ?type=item or ?type=bundle in the URL.</p>
       </body>
       </html>
     `;
@@ -183,7 +184,7 @@ router.get('/catalog/:itemId/:itemName/:itemType', async (req, res) => {
     // Check if the provided itemName matches the fetched data
     const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
     if (itemName !== encodedItemName) {
-      return res.redirect(`/catalog/${itemId}/${encodedItemName}/${itemType}`);
+      return res.redirect(`/catalog/${itemId}/${encodedItemName}?type=${itemType}`);
     }
 
     const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
