@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RobloxUser, RobloxFriends, RobloxFollowers } from './types';
+import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner } from './types';
 
 const API_TIMEOUT = 5000;
 
@@ -43,3 +43,67 @@ export async function fetchRobloxAvatar(userId: string): Promise<string> {
   }
 }
 
+// Group APIs
+
+export async function fetchRobloxGroupData(groupId: string): Promise<RobloxGroup> {
+  try {
+    const response = await axios.get(`https://groups.roblox.com/v1/groups/${groupId}`, { timeout: API_TIMEOUT });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching group data:', error);
+    throw new Error('Failed to fetch group data');
+  }
+}
+
+export async function fetchRobloxGroupName(groupId: string): Promise<string> {
+  try {
+    const groupData = await fetchRobloxGroupData(groupId);
+    return groupData.name;
+  } catch (error) {
+    console.error('Error fetching group name:', error);
+    throw new Error('Failed to fetch group name');
+  }
+}
+
+export async function fetchRobloxGroupDescription(groupId: string): Promise<string> {
+  try {
+    const groupData = await fetchRobloxGroupData(groupId);
+    return groupData.description;
+  } catch (error) {
+    console.error('Error fetching group description:', error);
+    throw new Error('Failed to fetch group description');
+  }
+}
+
+export async function fetchRobloxGroupMemberCount(groupId: string): Promise<number> {
+  try {
+    const groupData = await fetchRobloxGroupData(groupId);
+    return groupData.memberCount;
+  } catch (error) {
+    console.error('Error fetching group member count:', error);
+    throw new Error('Failed to fetch group member count');
+  }
+}
+
+export async function fetchRobloxGroupOwner(groupId: string): Promise<RobloxGroupOwner> {
+  try {
+    const groupData = await fetchRobloxGroupData(groupId);
+    return groupData.owner;
+  } catch (error) {
+    console.error('Error fetching group owner:', error);
+    throw new Error('Failed to fetch group owner');
+  }
+}
+
+export async function fetchRobloxGroupId(groupId: string): Promise<number> {
+  try {
+    const groupData = await fetchRobloxGroupData(groupId);
+    return groupData.id;
+  } catch (error) {
+    console.error('Error fetching group ID:', error);
+    throw new Error('Failed to fetch group ID');
+  }
+}
+
+// Note: The API doesn't provide creation date, followers count, or other details not present in the response.
+// If these are needed, you may need to look for alternative API endpoints or methods to retrieve this information.
