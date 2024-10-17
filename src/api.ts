@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem } from './types';
+import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem, BundleItem } from './types';
 
 const API_TIMEOUT = 5000;
 
@@ -110,10 +110,56 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
 
 export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem> {
   try {
-    const response = await axios.get(`https://catalog.roblox.com/v1/catalog/items/${itemId}/details`, { timeout: API_TIMEOUT });
-    return response.data;
+    // Fetch as an asset
+    const assetResponse = await axios.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });
+    const assetData = assetResponse.data;
+    
+    return {
+      id: assetData.AssetId,
+      itemType: 'Asset',
+      name: assetData.Name,
+      description: assetData.Description,
+      price: assetData.PriceInRobux,
+      creatorName: assetData.Creator.Name,
+      creatorType: assetData.Creator.CreatorType,
+      creatorTargetId: assetData.Creator.CreatorTargetId,
+      productId: assetData.ProductId,
+      assetType: assetData.AssetTypeId,
+      isLimited: assetData.IsLimited || assetData.IsLimitedUnique,
+      isLimitedUnique: assetData.IsLimitedUnique,
+      collectibleItemType: assetData.ProductType,
+      lowestPrice: assetData.CollectiblesItemDetails?.CollectibleLowestResalePrice,
+      priceStatus: assetData.IsForSale ? 'For Sale' : 'Off Sale',
+    };
+  } catch (assetError) {
+    // If asset fetch fails, we can keep the bundle logic as a fallback
+    try {
+      const bundleResponse = await axios.get(`https://catalog.roblox.com/v1/bundles/${itemId}/details`, { timeout: API_TIMEOUT });
+      const bundleItems = await fetchBundleItems(itemId);
+      return {
+        ...bundleResponse.data,
+        itemType: 'Bundle',
+        isLimited: false,
+        isLimitedUnique: false,
+        bundleItems
+      };
+    } catch (bundleError) {
+      console.error('Error fetching catalog item data:', assetError, bundleError);
+      throw new Error('Failed to fetch catalog item data');
+    }
+  }
+}
+
+async function fetchBundleItems(bundleId: string): Promise<BundleItem[]> {
+  try {
+    const response = await axios.get(`https://catalog.roblox.com/v1/bundles/${bundleId}/details`, { timeout: API_TIMEOUT });
+    return response.data.items.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type
+    }));
   } catch (error) {
-    console.error('Error fetching catalog item data:', error);
-    throw new Error('Failed to fetch catalog item data');
+    console.error('Error fetching bundle items:', error);
+    return [];
   }
 }

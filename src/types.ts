@@ -31,27 +31,30 @@ export interface RobloxGroup {
   hasVerifiedBadge: boolean;
 }
 
+export interface BundleItem {
+  id: number;
+  name: string;
+  type: string;
+}
+
 export interface CatalogItem {
   id: number;
   itemType: 'Asset' | 'Bundle';
-  assetType?: number;
-  bundleType?: string;
   name: string;
   description: string;
-  productId: number;
-  genres: string[];
-  itemStatus: string[];
-  itemRestrictions: string[];
+  price?: number;
+  creatorName: string;
   creatorType: string;
   creatorTargetId: number;
-  creatorName: string;
-  price: number | null;
-  priceStatus?: 'Free' | 'OffSale' | 'NoResellers';
-  favoriteCount: number;
-  purchaseCount?: number;
-  offSaleDeadline: string | null;
+  productId?: number;
+  assetType?: number;
+  bundleType?: string;
   lowestPrice?: number;
-  unitsAvailableForConsumption?: number;
+  priceStatus?: string;
+  isLimited: boolean;
+  isLimitedUnique: boolean;
+  collectibleItemType?: string;
+  bundleItems?: BundleItem[];
 }
 
 export interface CatalogItemResponse {

@@ -162,21 +162,27 @@ router.get('/catalog/:itemId/:itemName?', async (req, res) => {
 
     const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
 
+    let description = `Type: ${itemData.itemType}\n`;
+    description += `Creator: ${itemData.creatorName} (${itemData.creatorType})\n`;
+    description += `Price: ${itemData.price !== undefined ? `R$${itemData.price}` : 'N/A'}\n`;
+    description += `Lowest Price: ${itemData.lowestPrice !== undefined ? `R$${itemData.lowestPrice}` : 'N/A'}\n`;
+    description += `Sale Status: ${itemData.priceStatus}\n`;
+    description += `Limited: ${itemData.isLimited ? 'Yes' : 'No'}\n`;
+    description += `Collectible Type: ${itemData.collectibleItemType || 'N/A'}\n`;
+
+    description += `\n${itemData.description || 'No description available'}`;
+
     const metaTags = `
       <meta property="og:site_name" content="Roblox Catalog Item">
       <meta property="og:title" content="${itemData.name}">
-      <meta property="og:description" content="Creator: ${itemData.creatorName} | Price: ${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}
-      
-${itemData.description || 'No description available'}">
+      <meta property="og:description" content="${description}">
       <meta property="og:image" content="${itemIconUrl}">
       <meta property="og:image:width" content="420">
       <meta property="og:image:height" content="420">
       <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${itemName}">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="${itemData.name}">
-      <meta name="twitter:description" content="Creator: ${itemData.creatorName} | Price: ${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}
-      
-${itemData.description || 'No description available'}">
+      <meta name="twitter:description" content="${description}">
       <meta name="twitter:image" content="${itemIconUrl}">
     `;
 
