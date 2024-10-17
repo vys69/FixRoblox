@@ -91,6 +91,10 @@ router.get('/test', (req, res) => {
     res.send('Test route working');
   });
 
+router.get('/ping', (req, res) => {
+    res.send('pong');
+  });
+
 router.get('/groups/:groupId/:groupName?', async (req, res) => {
   console.log('Group route hit:', req.params);
   const groupId = req.params.groupId;
