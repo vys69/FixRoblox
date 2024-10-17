@@ -146,8 +146,6 @@ function fetchRobloxGroupId(groupId) {
     });
 }
 exports.fetchRobloxGroupId = fetchRobloxGroupId;
-// Note: The API doesn't provide creation date, followers count, or other details not present in the response.
-// If these are needed, you may need to look for alternative API endpoints or methods to retrieve this information.
 function fetchCatalogItemData(itemId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
