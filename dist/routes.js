@@ -132,5 +132,126 @@ router.get('/groups/:groupId/:groupName?', (req, res) => __awaiter(void 0, void 
         res.status(500).send('Error fetching Roblox group data');
     }
 }));
+router.get('/catalog/:itemId/:itemName', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { itemId, itemName } = req.params;
+    try {
+        const itemData = yield (0, api_1.fetchCatalogItemData)(itemId);
+        // Check if the provided itemName matches the fetched data
+        const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
+        if (itemName !== encodedItemName) {
+            return res.redirect(`/catalog/${itemId}/${encodedItemName}`);
+        }
+        const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
+        const metaTags = `
+      <meta property="og:title" content="${itemData.name}">
+      <meta property="og:description" content="${itemData.description || 'No description available'}">
+      <meta property="og:image" content="${itemIconUrl}">
+      <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${encodedItemName}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${itemData.name}">
+      <meta name="twitter:description" content="${itemData.description || 'No description available'}">
+      <meta name="twitter:image" content="${itemIconUrl}">
+      <meta name="roblox:item:price" content="${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}">
+      <meta name="roblox:item:type" content="${itemData.assetType}">
+      <meta name="roblox:item:limited" content="${itemData.isLimited ? 'Yes' : 'No'}">
+    `;
+        const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${itemData.name} - Roblox Catalog Item</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "https://www.roblox.com/catalog/${itemId}/${encodedItemName}";
+        </script>
+      </body>
+      </html>
+    `;
+        res.send(html);
+    }
+    catch (error) {
+        console.error('Error fetching Roblox catalog item data:', error);
+        const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Item Not Found</title>
+        ${(0, api_1.createErrorMetaTags)('The requested Roblox item could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Item Not Found</h1>
+        <p>The requested Roblox item could not be found.</p>
+      </body>
+      </html>
+    `;
+        res.status(404).send(errorHtml);
+    }
+}));
+router.get('/bundles/:bundleId/:bundleName', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { bundleId, bundleName } = req.params;
+    try {
+        const bundleData = yield (0, api_1.fetchBundleData)(bundleId);
+        // Check if the provided bundleName matches the fetched data
+        const encodedBundleName = encodeURIComponent(bundleData.name.replace(/\s+/g, '-'));
+        if (bundleName !== encodedBundleName) {
+            return res.redirect(`/bundles/${bundleId}/${encodedBundleName}`);
+        }
+        const bundleIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${bundleId}&width=420&height=420&format=png`;
+        const metaTags = `
+      <meta property="og:title" content="${bundleData.name}">
+      <meta property="og:description" content="${bundleData.description || 'No description available'}">
+      <meta property="og:image" content="${bundleIconUrl}">
+      <meta property="og:url" content="https://www.roblox.com/bundles/${bundleId}/${encodedBundleName}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${bundleData.name}">
+      <meta name="twitter:description" content="${bundleData.description || 'No description available'}">
+      <meta name="twitter:image" content="${bundleIconUrl}">
+      <meta name="roblox:bundle:price" content="${bundleData.price !== null ? `R$${bundleData.price}` : 'Off Sale'}">
+      <meta name="roblox:bundle:type" content="${bundleData.bundleType}">
+    `;
+        const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${bundleData.name} - Roblox Bundle</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "https://www.roblox.com/bundles/${bundleId}/${encodedBundleName}";
+        </script>
+      </body>
+      </html>
+    `;
+        res.send(html);
+    }
+    catch (error) {
+        console.error('Error fetching Roblox bundle data:', error);
+        const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Bundle Not Found</title>
+        ${(0, api_1.createErrorMetaTags)('The requested Roblox bundle could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Bundle Not Found</h1>
+        <p>The requested Roblox bundle could not be found.</p>
+      </body>
+      </html>
+    `;
+        res.status(404).send(errorHtml);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=routes.js.map

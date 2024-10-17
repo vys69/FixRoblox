@@ -5,7 +5,6 @@ import {
   fetchRobloxFollowers, 
   fetchRobloxAvatar,
   fetchRobloxGroupData,
-  fetchRobloxGroupMemberCount,
   fetchCatalogItemData,
   fetchBundleData,
   createErrorMetaTags
@@ -152,65 +151,30 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
 
 router.get('/catalog/:itemId/:itemName', async (req, res) => {
   const { itemId, itemName } = req.params;
-  const itemType = req.query.type as string;
-
-  if (itemType !== 'item' && itemType !== 'bundle') {
-    const errorHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error - Invalid URL</title>
-        ${createErrorMetaTags('Invalid URL. Please specify ?type=item or ?type=bundle in the URL.')}
-      </head>
-      <body>
-        <h1>Error: Invalid URL</h1>
-        <p>Please specify ?type=item or ?type=bundle in the URL.</p>
-      </body>
-      </html>
-    `;
-    return res.status(400).send(errorHtml);
-  }
 
   try {
-    let itemData;
-    if (itemType === 'item') {
-      itemData = await fetchCatalogItemData(itemId);
-    } else {
-      itemData = await fetchBundleData(itemId);
-    }
+    const itemData = await fetchCatalogItemData(itemId);
 
     // Check if the provided itemName matches the fetched data
     const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
     if (itemName !== encodedItemName) {
-      return res.redirect(`/catalog/${itemId}/${encodedItemName}?type=${itemType}`);
+      return res.redirect(`/catalog/${itemId}/${encodedItemName}`);
     }
 
     const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
 
-    let description = `Type: ${itemData.itemType}\n`;
-    description += `Creator: ${itemData.creatorName} (${itemData.creatorType})\n`;
-    description += `Price: ${itemData.price !== undefined ? `R$${itemData.price}` : 'N/A'}\n`;
-    description += `Lowest Price: ${itemData.lowestPrice !== undefined ? `R$${itemData.lowestPrice}` : 'N/A'}\n`;
-    description += `Sale Status: ${itemData.priceStatus}\n`;
-    description += `Limited: ${itemData.isLimited ? 'Yes' : 'No'}\n`;
-    description += `Collectible Type: ${itemData.collectibleItemType || 'N/A'}\n`;
-
-    description += `\n${itemData.description || 'No description available'}`;
-
     const metaTags = `
-      <meta property="og:site_name" content="Roblox Catalog Item">
       <meta property="og:title" content="${itemData.name}">
-      <meta property="og:description" content="${description}">
+      <meta property="og:description" content="${itemData.description || 'No description available'}">
       <meta property="og:image" content="${itemIconUrl}">
-      <meta property="og:image:width" content="420">
-      <meta property="og:image:height" content="420">
-      <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${itemName}">
+      <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${encodedItemName}">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="${itemData.name}">
-      <meta name="twitter:description" content="${description}">
+      <meta name="twitter:description" content="${itemData.description || 'No description available'}">
       <meta name="twitter:image" content="${itemIconUrl}">
+      <meta name="roblox:item:price" content="${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}">
+      <meta name="roblox:item:type" content="${itemData.assetType}">
+      <meta name="roblox:item:limited" content="${itemData.isLimited ? 'Yes' : 'No'}">
     `;
 
     const html = `
@@ -224,7 +188,7 @@ router.get('/catalog/:itemId/:itemName', async (req, res) => {
       </head>
       <body>
         <script>
-          window.location.href = "https://www.roblox.com/catalog/${itemId}/${itemName}";
+          window.location.href = "https://www.roblox.com/catalog/${itemId}/${encodedItemName}";
         </script>
       </body>
       </html>
@@ -245,6 +209,72 @@ router.get('/catalog/:itemId/:itemName', async (req, res) => {
       <body>
         <h1>Error: Item Not Found</h1>
         <p>The requested Roblox item could not be found.</p>
+      </body>
+      </html>
+    `;
+    res.status(404).send(errorHtml);
+  }
+});
+
+router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
+  const { bundleId, bundleName } = req.params;
+
+  try {
+    const bundleData = await fetchBundleData(bundleId);
+
+    // Check if the provided bundleName matches the fetched data
+    const encodedBundleName = encodeURIComponent(bundleData.name.replace(/\s+/g, '-'));
+    if (bundleName !== encodedBundleName) {
+      return res.redirect(`/bundles/${bundleId}/${encodedBundleName}`);
+    }
+
+    const bundleIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${bundleId}&width=420&height=420&format=png`;
+
+    const metaTags = `
+      <meta property="og:title" content="${bundleData.name}">
+      <meta property="og:description" content="${bundleData.description || 'No description available'}">
+      <meta property="og:image" content="${bundleIconUrl}">
+      <meta property="og:url" content="https://www.roblox.com/bundles/${bundleId}/${encodedBundleName}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${bundleData.name}">
+      <meta name="twitter:description" content="${bundleData.description || 'No description available'}">
+      <meta name="twitter:image" content="${bundleIconUrl}">
+      <meta name="roblox:bundle:price" content="${bundleData.price !== null ? `R$${bundleData.price}` : 'Off Sale'}">
+      <meta name="roblox:bundle:type" content="${bundleData.bundleType}">
+    `;
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${bundleData.name} - Roblox Bundle</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "https://www.roblox.com/bundles/${bundleId}/${encodedBundleName}";
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error fetching Roblox bundle data:', error);
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Bundle Not Found</title>
+        ${createErrorMetaTags('The requested Roblox bundle could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Bundle Not Found</h1>
+        <p>The requested Roblox bundle could not be found.</p>
       </body>
       </html>
     `;

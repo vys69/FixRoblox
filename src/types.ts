@@ -46,8 +46,8 @@ export interface CatalogItem {
   creatorName: string;
   creatorType: string;
   creatorTargetId: number;
-  productId: number | null;
-  assetType: number | null;
+  productId?: number | null;  // Make this optional
+  assetType?: number | null;  // Make this optional
   bundleType?: string;
   isLimited: boolean;
   isLimitedUnique: boolean;

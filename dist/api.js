@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
+exports.createErrorMetaTags = exports.fetchBundleData = exports.fetchCatalogItemData = exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
 const axios_1 = __importDefault(require("axios"));
 const API_TIMEOUT = 5000;
 function fetchRobloxUserData(userId) {
@@ -148,4 +148,82 @@ function fetchRobloxGroupId(groupId) {
 exports.fetchRobloxGroupId = fetchRobloxGroupId;
 // Note: The API doesn't provide creation date, followers count, or other details not present in the response.
 // If these are needed, you may need to look for alternative API endpoints or methods to retrieve this information.
+function fetchCatalogItemData(itemId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });
+            const data = response.data;
+            return {
+                id: data.AssetId,
+                itemType: 'Asset',
+                name: data.Name,
+                description: data.Description,
+                price: data.PriceInRobux,
+                creatorName: data.Creator.Name,
+                creatorType: data.Creator.CreatorType,
+                creatorTargetId: data.Creator.CreatorTargetId,
+                productId: data.ProductId,
+                assetType: data.AssetTypeId,
+                isLimited: data.IsLimited || data.IsLimitedUnique,
+                isLimitedUnique: data.IsLimitedUnique,
+                collectibleItemType: data.CollectibleItemType,
+                lowestPrice: data.LowestPrice,
+                priceStatus: data.PriceStatus
+            };
+        }
+        catch (error) {
+            console.error('Error fetching catalog item data:', error);
+            throw new Error('Failed to fetch catalog item data');
+        }
+    });
+}
+exports.fetchCatalogItemData = fetchCatalogItemData;
+function fetchBundleData(bundleId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://catalog.roblox.com/v1/bundles/${bundleId}/details`, { timeout: API_TIMEOUT });
+            const data = response.data;
+            return {
+                id: data.id,
+                itemType: 'Bundle',
+                name: data.name,
+                description: data.description,
+                price: data.price,
+                creatorName: data.creator.name,
+                creatorType: data.creator.type,
+                creatorTargetId: data.creator.id,
+                bundleType: data.bundleType,
+                isLimited: false,
+                isLimitedUnique: false,
+                collectibleItemType: null,
+                lowestPrice: null,
+                priceStatus: data.price !== null ? 'For Sale' : 'Off Sale',
+                bundleItems: data.items.map((item) => ({
+                    id: item.id,
+                    name: item.name,
+                    type: item.type
+                })),
+                productId: null,
+                assetType: null // Bundles don't have an assetType
+            };
+        }
+        catch (error) {
+            console.error('Error fetching bundle data:', error);
+            throw new Error('Failed to fetch bundle data');
+        }
+    });
+}
+exports.fetchBundleData = fetchBundleData;
+function createErrorMetaTags(errorMessage) {
+    return `
+    <meta property="og:title" content="Error - Roblox Item Not Found">
+    <meta property="og:description" content="${errorMessage}">
+    <meta property="og:image" content="https://rxblox.com/error-image.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Error - Roblox Item Not Found">
+    <meta name="twitter:description" content="${errorMessage}">
+    <meta name="twitter:image" content="https://rxblox.com/error-image.png">
+  `;
+}
+exports.createErrorMetaTags = createErrorMetaTags;
 //# sourceMappingURL=api.js.map

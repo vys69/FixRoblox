@@ -110,25 +110,24 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
 
 export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem> {
   try {
-    const assetResponse = await axios.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });
-    const assetData = assetResponse.data;
-    
+    const response = await axios.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });
+    const data = response.data;
     return {
-      id: assetData.AssetId,
+      id: data.AssetId,
       itemType: 'Asset',
-      name: assetData.Name,
-      description: assetData.Description,
-      price: assetData.PriceInRobux,
-      creatorName: assetData.Creator.Name,
-      creatorType: assetData.Creator.CreatorType,
-      creatorTargetId: assetData.Creator.CreatorTargetId,
-      productId: assetData.ProductId,
-      assetType: assetData.AssetTypeId,
-      isLimited: assetData.IsLimited || assetData.IsLimitedUnique,
-      isLimitedUnique: assetData.IsLimitedUnique,
-      collectibleItemType: assetData.ProductType,
-      lowestPrice: assetData.CollectiblesItemDetails?.CollectibleLowestResalePrice,
-      priceStatus: assetData.IsForSale ? 'For Sale' : 'Off Sale',
+      name: data.Name,
+      description: data.Description,
+      price: data.PriceInRobux,
+      creatorName: data.Creator.Name,
+      creatorType: data.Creator.CreatorType,
+      creatorTargetId: data.Creator.CreatorTargetId,
+      productId: data.ProductId,
+      assetType: data.AssetTypeId,
+      isLimited: data.IsLimited || data.IsLimitedUnique,
+      isLimitedUnique: data.IsLimitedUnique,
+      collectibleItemType: data.CollectibleItemType,
+      lowestPrice: data.LowestPrice,
+      priceStatus: data.PriceStatus
     };
   } catch (error) {
     console.error('Error fetching catalog item data:', error);
@@ -136,17 +135,36 @@ export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem>
   }
 }
 
-async function fetchBundleItems(bundleId: string): Promise<BundleItem[]> {
+export async function fetchBundleData(bundleId: string): Promise<CatalogItem> {
   try {
     const response = await axios.get(`https://catalog.roblox.com/v1/bundles/${bundleId}/details`, { timeout: API_TIMEOUT });
-    return response.data.items.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      type: item.type
-    }));
+    const data = response.data;
+    return {
+      id: data.id,
+      itemType: 'Bundle',
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      creatorName: data.creator.name,
+      creatorType: data.creator.type,
+      creatorTargetId: data.creator.id,
+      bundleType: data.bundleType,
+      isLimited: false, // Bundles are typically not limited
+      isLimitedUnique: false,
+      collectibleItemType: null,
+      lowestPrice: null,
+      priceStatus: data.price !== null ? 'For Sale' : 'Off Sale',
+      bundleItems: data.items.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        type: item.type
+      })),
+      productId: null, // Bundles don't have a productId
+      assetType: null  // Bundles don't have an assetType
+    };
   } catch (error) {
-    console.error('Error fetching bundle items:', error);
-    return [];
+    console.error('Error fetching bundle data:', error);
+    throw new Error('Failed to fetch bundle data');
   }
 }
 
@@ -160,36 +178,4 @@ export function createErrorMetaTags(errorMessage: string): string {
     <meta name="twitter:description" content="${errorMessage}">
     <meta name="twitter:image" content="https://rxblox.com/error-image.png">
   `;
-}
-
-export async function fetchBundleData(bundleId: string): Promise<CatalogItem> {
-  try {
-    const bundleResponse = await axios.get(`https://catalog.roblox.com/v1/bundles/${bundleId}/details`, { timeout: API_TIMEOUT });
-    const bundleData = bundleResponse.data;
-    const bundleItems = await fetchBundleItems(bundleId);
-    
-    return {
-      id: bundleData.id,
-      itemType: 'Bundle',
-      name: bundleData.name,
-      description: bundleData.description,
-      price: bundleData.price,
-      creatorName: bundleData.creator.name,
-      creatorType: bundleData.creator.type,
-      creatorTargetId: bundleData.creator.id,
-      bundleType: bundleData.bundleType,
-      isLimited: false, // Bundles are typically not limited, but you may need to adjust this if that's not always the case
-      isLimitedUnique: false, // Same as above
-      collectibleItemType: 'Bundle', // You might want to adjust this based on the actual data
-      priceStatus: bundleData.price !== null ? 'For Sale' : 'Off Sale',
-      bundleItems: bundleItems,
-      // Add these properties to match CatalogItem interface
-      productId: bundleData.product?.id || null,
-      assetType: null, // Bundles don't have an assetType
-      lowestPrice: null // Bundles typically don't have a resale market, but you can adjust if needed
-    };
-  } catch (error) {
-    console.error('Error fetching bundle data:', error);
-    throw new Error('Failed to fetch bundle data');
-  }
 }
