@@ -87,7 +87,12 @@ router.get('/users/:userId/profile', async (req, res) => {
   }
 });
 
+router.get('/test', (req, res) => {
+    res.send('Test route working');
+  });
+
 router.get('/groups/:groupId/:groupName?', async (req, res) => {
+  console.log('Group route hit:', req.params);
   const groupId = req.params.groupId;
   let groupName = req.params.groupName || '';
 
