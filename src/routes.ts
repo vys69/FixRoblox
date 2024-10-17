@@ -5,7 +5,8 @@ import {
   fetchRobloxFollowers, 
   fetchRobloxAvatar,
   fetchRobloxGroupData,
-  fetchRobloxGroupMemberCount
+  fetchRobloxGroupMemberCount,
+  fetchCatalogItemData
 } from './api';
 
 const router = Router();
@@ -144,6 +145,62 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   } catch (error) {
     console.error('Error fetching Roblox group data:', error);
     res.status(500).send('Error fetching Roblox group data');
+  }
+});
+
+router.get('/catalog/:itemId/:itemName?', async (req, res) => {
+  const itemId = req.params.itemId;
+  let itemName = req.params.itemName || '';
+
+  try {
+    const itemData = await fetchCatalogItemData(itemId);
+
+    // If itemName wasn't provided in the URL or doesn't match, use the fetched name
+    if (!itemName || itemName !== encodeURIComponent(itemData.name.replace(/\s+/g, '-'))) {
+      itemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
+    }
+
+    const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
+
+    const metaTags = `
+      <meta property="og:site_name" content="Roblox Catalog Item">
+      <meta property="og:title" content="${itemData.name}">
+      <meta property="og:description" content="Creator: ${itemData.creatorName} | Price: ${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}
+      
+${itemData.description || 'No description available'}">
+      <meta property="og:image" content="${itemIconUrl}">
+      <meta property="og:image:width" content="420">
+      <meta property="og:image:height" content="420">
+      <meta property="og:url" content="https://www.roblox.com/catalog/${itemId}/${itemName}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${itemData.name}">
+      <meta name="twitter:description" content="Creator: ${itemData.creatorName} | Price: ${itemData.price !== null ? `R$${itemData.price}` : 'Off Sale'}
+      
+${itemData.description || 'No description available'}">
+      <meta name="twitter:image" content="${itemIconUrl}">
+    `;
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${itemData.name} - Roblox Catalog Item</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "https://www.roblox.com/catalog/${itemId}/${itemName}";
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error fetching Roblox catalog item data:', error);
+    res.status(500).send('Error fetching Roblox catalog item data');
   }
 });
 

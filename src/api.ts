@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner } from './types';
+import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem } from './types';
 
 const API_TIMEOUT = 5000;
 
@@ -107,3 +107,13 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
 
 // Note: The API doesn't provide creation date, followers count, or other details not present in the response.
 // If these are needed, you may need to look for alternative API endpoints or methods to retrieve this information.
+
+export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem> {
+  try {
+    const response = await axios.get(`https://catalog.roblox.com/v1/catalog/items/${itemId}/details`, { timeout: API_TIMEOUT });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching catalog item data:', error);
+    throw new Error('Failed to fetch catalog item data');
+  }
+}
