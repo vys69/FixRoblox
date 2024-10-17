@@ -96,7 +96,6 @@ router.get('/ping', (req, res) => {
   });
 
 router.get('/groups/:groupId/:groupName?', async (req, res) => {
-  console.log('Group route hit:', req.params);
   const groupId = req.params.groupId;
   let groupName = req.params.groupName || '';
 
