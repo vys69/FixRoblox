@@ -6,7 +6,9 @@ import {
   fetchRobloxAvatar,
   fetchRobloxGroupData,
   fetchRobloxGroupMemberCount,
-  fetchCatalogItemData
+  fetchCatalogItemData,
+  fetchBundleData,
+  createErrorMetaTags
 } from './api';
 
 const router = Router();
@@ -148,16 +150,42 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   }
 });
 
-router.get('/catalog/:itemId/:itemName?', async (req, res) => {
-  const itemId = req.params.itemId;
-  let itemName = req.params.itemName || '';
+router.get('/catalog/:itemId/:itemType?/:itemName?', async (req, res) => {
+  const { itemId, itemType, itemName } = req.params;
+
+  if (!itemType) {
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Invalid URL</title>
+        ${createErrorMetaTags('Invalid URL. Please specify /item or /bundle after the item ID.')}
+      </head>
+      <body>
+        <h1>Error: Invalid URL</h1>
+        <p>Please specify /item or /bundle after the item ID.</p>
+      </body>
+      </html>
+    `;
+    return res.status(400).send(errorHtml);
+  }
 
   try {
-    const itemData = await fetchCatalogItemData(itemId);
+    let itemData;
+    if (itemType === 'item') {
+      itemData = await fetchCatalogItemData(itemId);
+    } else if (itemType === 'bundle') {
+      itemData = await fetchBundleData(itemId);
+    } else {
+      throw new Error('Invalid item type. Use /item or /bundle.');
+    }
 
     // If itemName wasn't provided in the URL or doesn't match, use the fetched name
-    if (!itemName || itemName !== encodeURIComponent(itemData.name.replace(/\s+/g, '-'))) {
-      itemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
+    const encodedItemName = encodeURIComponent(itemData.name.replace(/\s+/g, '-'));
+    if (!itemName || itemName !== encodedItemName) {
+      return res.redirect(`/catalog/${itemId}/${itemType}/${encodedItemName}`);
     }
 
     const itemIconUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;

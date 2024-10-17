@@ -42,18 +42,18 @@ export interface CatalogItem {
   itemType: 'Asset' | 'Bundle';
   name: string;
   description: string;
-  price?: number;
+  price: number | null;
   creatorName: string;
   creatorType: string;
   creatorTargetId: number;
-  productId?: number;
-  assetType?: number;
+  productId: number | null;
+  assetType: number | null;
   bundleType?: string;
-  lowestPrice?: number;
-  priceStatus?: string;
   isLimited: boolean;
   isLimitedUnique: boolean;
-  collectibleItemType?: string;
+  collectibleItemType: string | null;
+  lowestPrice: number | null;
+  priceStatus: string;
   bundleItems?: BundleItem[];
 }
 

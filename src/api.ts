@@ -110,7 +110,6 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
 
 export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem> {
   try {
-    // Fetch as an asset
     const assetResponse = await axios.get(`https://economy.roblox.com/v2/assets/${itemId}/details`, { timeout: API_TIMEOUT });
     const assetData = assetResponse.data;
     
@@ -131,22 +130,9 @@ export async function fetchCatalogItemData(itemId: string): Promise<CatalogItem>
       lowestPrice: assetData.CollectiblesItemDetails?.CollectibleLowestResalePrice,
       priceStatus: assetData.IsForSale ? 'For Sale' : 'Off Sale',
     };
-  } catch (assetError) {
-    // If asset fetch fails, we can keep the bundle logic as a fallback
-    try {
-      const bundleResponse = await axios.get(`https://catalog.roblox.com/v1/bundles/${itemId}/details`, { timeout: API_TIMEOUT });
-      const bundleItems = await fetchBundleItems(itemId);
-      return {
-        ...bundleResponse.data,
-        itemType: 'Bundle',
-        isLimited: false,
-        isLimitedUnique: false,
-        bundleItems
-      };
-    } catch (bundleError) {
-      console.error('Error fetching catalog item data:', assetError, bundleError);
-      throw new Error('Failed to fetch catalog item data');
-    }
+  } catch (error) {
+    console.error('Error fetching catalog item data:', error);
+    throw new Error('Failed to fetch catalog item data');
   }
 }
 
@@ -161,5 +147,49 @@ async function fetchBundleItems(bundleId: string): Promise<BundleItem[]> {
   } catch (error) {
     console.error('Error fetching bundle items:', error);
     return [];
+  }
+}
+
+export function createErrorMetaTags(errorMessage: string): string {
+  return `
+    <meta property="og:title" content="Error - Roblox Item Not Found">
+    <meta property="og:description" content="${errorMessage}">
+    <meta property="og:image" content="https://rxblox.com/error-image.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Error - Roblox Item Not Found">
+    <meta name="twitter:description" content="${errorMessage}">
+    <meta name="twitter:image" content="https://rxblox.com/error-image.png">
+  `;
+}
+
+export async function fetchBundleData(bundleId: string): Promise<CatalogItem> {
+  try {
+    const bundleResponse = await axios.get(`https://catalog.roblox.com/v1/bundles/${bundleId}/details`, { timeout: API_TIMEOUT });
+    const bundleData = bundleResponse.data;
+    const bundleItems = await fetchBundleItems(bundleId);
+    
+    return {
+      id: bundleData.id,
+      itemType: 'Bundle',
+      name: bundleData.name,
+      description: bundleData.description,
+      price: bundleData.price,
+      creatorName: bundleData.creator.name,
+      creatorType: bundleData.creator.type,
+      creatorTargetId: bundleData.creator.id,
+      bundleType: bundleData.bundleType,
+      isLimited: false, // Bundles are typically not limited, but you may need to adjust this if that's not always the case
+      isLimitedUnique: false, // Same as above
+      collectibleItemType: 'Bundle', // You might want to adjust this based on the actual data
+      priceStatus: bundleData.price !== null ? 'For Sale' : 'Off Sale',
+      bundleItems: bundleItems,
+      // Add these properties to match CatalogItem interface
+      productId: bundleData.product?.id || null,
+      assetType: null, // Bundles don't have an assetType
+      lowestPrice: null // Bundles typically don't have a resale market, but you can adjust if needed
+    };
+  } catch (error) {
+    console.error('Error fetching bundle data:', error);
+    throw new Error('Failed to fetch bundle data');
   }
 }
