@@ -51,16 +51,21 @@ router.get('/users/:userId/profile', async (req, res) => {
     ]);
 
     const metaTags = `
+      <meta property="og:site_name" content="Roblox User Profile">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
-      <meta property="og:description" content="${userData.description || 'No description available'}">
+      <meta property="og:description" content="Friends: ${friendsData.count} | Followers: ${followersData.count}
+
+${userData.description || 'No description available'}">
       <meta property="og:image" content="${avatarUrl}">
+      <meta property="og:image:width" content="150">
+      <meta property="og:image:height" content="150">
       <meta property="og:url" content="https://www.roblox.com/users/${userId}/profile">
       <meta name="twitter:card" content="summary">
       <meta name="twitter:title" content="${userData.displayName} (@${userData.name})">
-      <meta name="twitter:description" content="${userData.description || 'No description available'}">
+      <meta name="twitter:description" content="Friends: ${friendsData.count} | Followers: ${followersData.count}
+
+${userData.description || 'No description available'}">
       <meta name="twitter:image" content="${avatarUrl}">
-      <meta name="roblox:friends" content="${friendsData.count}">
-      <meta name="roblox:followers" content="${followersData.count}">
     `;
 
     const html = `
