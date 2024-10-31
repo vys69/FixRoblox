@@ -141,6 +141,18 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
     const html = `
       <!DOCTYPE html>
       <html lang="en">
+      <!--
+      ▄████████
+      ███    ███ ▀████    ▐████▀ ▀█████████▄   ▄█        ▄██████▄  ▀████    ▐████▀  
+      ███    ███    ███  ▐███      ███    ███ ███       ███    ███    ███  ▐███    
+    ▄███▄▄▄▄██▀    ▀███▄███▀     ▄███▄▄▄██▀  ███       ███    ███    ▀███▄███▀    
+    ▀▀███▀▀▀▀▀      ████▀██▄     ▀▀███▀▀▀██▄  ███       ███    ███    ████▀██▄     
+    ▀███████████   ▐███  ▀███      ███    ██▄ ███       ███    ███   ▐███  ▀███    
+      ███    ███   ████    ███▄   ▄█████████▀ █████▄▄██  ▀██████▀   ████       ███▄
+      ███    ███  
+      ███    ███  fixroblox.com
+                  A better way to embed Roblox links on Discord
+      -->
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
