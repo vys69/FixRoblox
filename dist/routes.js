@@ -28,8 +28,42 @@ const page = `
   <meta name="twitter:description" content="Fix Roblox embeds">
   <meta name="twitter:image" content="https://fixroblox.com/assets/logo.png">
 </head>
-<body style="background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
-  <h1>roblox embeds suck... 🤮🤧</h1>
+<body style="background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0;"> 
+<h1 style="margin: 0;">roblox embeds suck... 🤮🤧</h1>
+  <span>
+    made by <a href="https://github.com/vys69/rxblox2">grim,</a>
+    <span> 
+      written in 
+        <img style="height: 20px; width: 20px;" 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png" 
+          alt="typescript">
+    </span>
+  </span>
+  <style>
+  span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    line-height: 0;
+}
+
+a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    color: inherit;
+    height: 100%;
+    margin-right: 2px;
+    text-decoration: none;
+    color: #2d79c7;
+}
+
+img{
+padding: 5px;
+}
+  </style>
 </body>
 </html>
 `;
