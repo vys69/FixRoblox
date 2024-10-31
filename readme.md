@@ -9,9 +9,9 @@
 
 ## Embed Profiles
 
-Easily share Roblox user profiles with rich embeds, including avatar images, friend counts, inventory value and more.
+Easily share Roblox user profiles with rich embeds, including avatar images, friend counts, inventory value and account creation date.
 
-![image](https://github.com/user-attachments/assets/e6686339-7fbe-4a83-9b92-5b37048ff50c)
+![image](https://github.com/user-attachments/assets/426865d5-aec4-40ab-a715-86d17d3a73a4)
 
 ## Embed Groups
 
