@@ -91,7 +91,7 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
         const robuxValue = `R$${formattedValue}`;
         const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
         const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
-        const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${robuxValue}   📅 ${createdYear}`);
+        const statsText = encodeURIComponent(`👤 ${friendsData.count}   👥 ${followersData.count}   💰 ${robuxValue}   📅 ${createdYear}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
