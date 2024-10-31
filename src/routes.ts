@@ -291,13 +291,13 @@ router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
 });
 
 router.get('/owoembed', (req, res) => {
-  const { text, status, author, friends, followers } = req.query;
+  const { text, status, author, followers, friends } = req.query;
   
   const oembedResponse = {
     type: "rich",
     version: "1.0",
-    title: `👥 ${friends} 👀 ${followers}`,
-    author_name: author,
+    title: `${author}'s Roblox Profile`,
+    author_name: `👥 ${friends} 👀 ${followers}`,
     author_url: `https://www.roblox.com/users/${status}/profile`,
     provider_name: "FixRoblox",
     provider_url: "https://fixroblox.com",
