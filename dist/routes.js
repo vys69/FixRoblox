@@ -15,56 +15,36 @@ const router = (0, express_1.Router)();
 const page = `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix Roblox</title>
-  <meta property="og:title" content="Fix Roblox">
-  <meta property="og:description" content="Fix Roblox embeds">
-  <meta property="og:image" content="https://fixroblox.com/assets/logo.png">
-  <meta property="og:url" content="https://fixroblox.com">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Fix Roblox">
-  <meta name="twitter:description" content="Fix Roblox embeds">
-  <meta name="twitter:image" content="https://fixroblox.com/assets/logo.png">
-</head>
-<body style="background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0;"> 
-<h1 style="margin: 0;">roblox embeds suck... 🤮🤧</h1>
-  <span>
-    made by <a href="https://github.com/vys69/rxblox2">grim,</a>
-    <span> 
-      written in 
-        <img style="height: 20px; width: 20px;" 
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png" 
-          alt="typescript">
-    </span>
-  </span>
-  <style>
-  span {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    line-height: 0;
-}
-
-a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-left: 5px;
-    color: inherit;
-    height: 100%;
-    margin-right: 2px;
-    text-decoration: none;
-    color: #2d79c7;
-}
-
-img{
-padding: 5px;
-}
-  </style>
-</body>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Fix Roblox</title>
+      <meta property="og:title" content="Fix Roblox">
+      <meta property="og:description" content="Fix Roblox embeds">
+      <meta property="og:image" content="https://fixroblox.com/assets/logo.png">
+      <meta property="og:url" content="https://fixroblox.com">
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="Fix Roblox">
+      <meta name="twitter:description" content="Fix Roblox embeds">
+      <meta name="twitter:image" content="https://fixroblox.com/assets/logo.png">
+   </head>
+   <body style="gap: 5px; background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;">
+      <h1 style="margin: 0; text-align: center;">roblox embeds suck... 🤮🤧</h1>
+      <span>
+      made by <a style="color: #007acc; text-decoration: none; font-weight: bold;" href="https://github.com/vys69/rxblox2">grim</a>
+      </span>
+      <span style="position: absolute;bottom: 0; right: -30px;display: flex;align-items: center;padding: 10px;">
+      built with <img style="width: 50%;
+         margin-left: 5px;" src="https://img.shields.io/badge/typescript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="typescript">
+      </span>
+      <style>
+         @media (max-width: 768px){
+         h1{
+         max-width: 380px;
+         }
+         }
+      </style>
+   </body>
 </html>
 `;
 router.get('/', (req, res) => {
@@ -91,7 +71,7 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
         const robuxValue = `R$${formattedValue}`;
         const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
         const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
-        const statsText = encodeURIComponent(`👤 ${friendsData.count}   👥 ${followersData.count}   💰 ${robuxValue}   📅 ${createdYear}`);
+        const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${robuxValue}   📅 ${createdYear}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
