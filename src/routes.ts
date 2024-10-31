@@ -61,7 +61,11 @@ router.get('/users/:userId/profile', async (req, res) => {
       currency: 'USD'
     }).format(rolimonData.value);
 
-    const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${formattedValue}`);
+    const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
+
+    const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
+
+    const statsText = encodeURIComponent(`👥 ${formattedFriends}   👀 ${formattedFollowers}   💰 ${formattedValue}`);
     
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
