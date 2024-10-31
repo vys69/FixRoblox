@@ -46,6 +46,8 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
             (0, api_1.fetchRobloxAvatar)(userId),
             (0, api_1.fetchRolimonData)(userId)
         ]);
+        // Create stats text with emojis
+        const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
@@ -53,13 +55,12 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
       <meta property="og:image" content="${avatarUrl}">
       <meta property="og:url" content="https://www.roblox.com/users/${userId}/profile">
       <meta name="twitter:card" content="summary">
-      <meta name="twitter:title" content="**${userData.displayName} (@${userData.name})**">
+      <meta name="twitter:title" content="${userData.displayName} (@${userData.name})">
       <meta name="twitter:description" content="${userData.description || 'No description available'}">
       <meta name="twitter:image" content="${avatarUrl}">
       <meta name="roblox:friends" content="${friendsData.count}">
       <meta name="roblox:followers" content="${followersData.count}">
-      <link rel="alternate" href="https://fxtwitter.com/owoembed?text=%F0%9F%92%AC%2011.8K%20%20%20%F0%9F%94%81%2020.2K%20%20%20%E2%9D%A4%EF%B8%8F%20403.4K&status=1355276142262050817&author=jonstewart" type="application/json+oembed" title="Jon Stewart">
-
+      <link rel="alternate" href="https://fixroblox.com/owoembed?text=${statsText}&status=${userId}&author=${userData.name}" type="application/json+oembed" title="${userData.displayName}">
     `;
         const html = `
       <!DOCTYPE html>
@@ -257,5 +258,19 @@ router.get('/bundles/:bundleId/:bundleName', (req, res) => __awaiter(void 0, voi
         res.status(404).send(errorHtml);
     }
 }));
+router.get('/owoembed', (req, res) => {
+    const { text, status, author } = req.query;
+    const oembedResponse = {
+        type: "rich",
+        version: "1.0",
+        title: `${author}'s Roblox Profile`,
+        author_name: author,
+        author_url: `https://www.roblox.com/users/${status}/profile`,
+        provider_name: "FixRoblox",
+        provider_url: "https://fixroblox.com",
+        stats: decodeURIComponent(text)
+    };
+    res.json(oembedResponse);
+});
 exports.default = router;
 //# sourceMappingURL=routes.js.map
