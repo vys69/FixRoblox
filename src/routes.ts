@@ -33,7 +33,7 @@ const page = `
 <body style="background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0;"> 
 <h1 style="margin: 0;">roblox embeds suck... 🤮🤧</h1>
   <span>
-    made by <a href="github.com/vys69/rxblox2">grim,</a>
+    made by <a href="https://github.com/vys69/rxblox2">grim,</a>
     <span> 
       written in 
         <img style="height: 20px; width: 20px;" 
