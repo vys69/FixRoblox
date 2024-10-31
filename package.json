@@ -2,13 +2,19 @@
 	"name": "express-typescript-vercel-part2",
 	"version": "1.0.0",
 	"description": "",
-	"main": "src/index.ts",
+	"main": "index.js",
 	"scripts": {
-		"start": "nodemon -r tsconfig-paths/register src/index.ts",
-		"build": "tsc --project .config/tsconfig.json",
-		"dev": "nodemon -r tsconfig-paths/register src/index.ts",
+		"start": "nodemon src/index.ts",
+		"build": "rimraf dist && tsc",
+		"ts.check": "tsc --project tsconfig.json",
+		"add-build": "git add dist",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"pre-commit": [
+		"ts.check",
+		"build",
+		"add-build"
+	],
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
@@ -16,12 +22,13 @@
 		"@types/express": "^4.17.14",
 		"@types/node": "^18.11.9",
 		"nodemon": "^2.0.20",
+		"pre-commit": "^1.2.2",
 		"ts-node": "^10.9.1",
-		"typescript": "^4.8.4",
-		"tsconfig-paths": "^4.2.0"
+		"typescript": "^4.8.4"
 	},
 	"dependencies": {
 		"axios": "^1.7.7",
-		"express": "^4.18.2"
+		"express": "^4.18.2",
+		"rimraf": "^6.0.1"
 	}
 }
