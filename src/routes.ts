@@ -312,7 +312,7 @@ router.get('/owoembed', (req, res) => {
   const oembedResponse = {
       author_name: decodeURIComponent(text as string),
       author_url: `https://www.roblox.com/users/${status}/profile`,
-      provider_name: "FixRoblox",
+      provider_name: "FixRoblox / RxBlox",
       provider_url: "https://fixroblox.com",
       title: `${author}'s Roblox Profile`,
       type: "link",
