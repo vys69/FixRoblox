@@ -23,7 +23,7 @@ const page = `
       <title>Fix Roblox</title>
       <meta property="og:title" content="Fix Roblox">
       <meta property="og:description" content="Fix Roblox embeds">
-      <meta property="og:image" content="https://fixroblox.com/assets/logo.png">
+      <meta property="og:image" content="/ogimage.jpg">
       <meta property="og:url" content="https://fixroblox.com">
       <meta name="twitter:card" content="summary">
       <meta name="twitter:title" content="Fix Roblox">
