@@ -2,6 +2,7 @@ export interface RobloxUser {
   name: string;
   displayName: string;
   description: string;
+  created: string;
 }
 
 export interface RobloxFriends {
@@ -67,4 +68,15 @@ export interface CatalogItemResponse {
 export interface RolimonData {
   rap: number;
   value: number;
+}
+
+export interface RobloxUserData {
+  description: string;
+  created: string;
+  isBanned: boolean;
+  externalAppDisplayName: string | null;
+  hasVerifiedBadge: boolean;
+  id: number;
+  name: string;
+  displayName: string;
 }

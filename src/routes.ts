@@ -89,7 +89,10 @@ router.get('/users/:userId/profile', async (req, res) => {
       fetchRolimonData(userId)
     ]);
 
-    // Create stats text with emojis
+    // Get just the year from created date
+    const createdYear = new Date(userData.created).getFullYear();
+
+    // Format value
     const formattedValue = new Intl.NumberFormat('en-US', {
       style: 'decimal',
       minimumFractionDigits: 0,
@@ -102,7 +105,7 @@ router.get('/users/:userId/profile', async (req, res) => {
 
     const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
 
-    const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   ${robuxValue}`);
+    const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${robuxValue}   📅 ${createdYear}`);
     
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">

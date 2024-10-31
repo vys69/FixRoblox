@@ -80,7 +80,9 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
             (0, api_1.fetchRobloxAvatar)(userId),
             (0, api_1.fetchRolimonData)(userId)
         ]);
-        // Create stats text with emojis
+        // Get just the year from created date
+        const createdYear = new Date(userData.created).getFullYear();
+        // Format value
         const formattedValue = new Intl.NumberFormat('en-US', {
             style: 'decimal',
             minimumFractionDigits: 0,
@@ -89,7 +91,7 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
         const robuxValue = `R$${formattedValue}`;
         const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
         const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
-        const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   ${robuxValue}`);
+        const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${robuxValue}   📅 ${createdYear}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
