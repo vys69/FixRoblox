@@ -96,13 +96,13 @@ router.get('/users/:userId/profile', async (req, res) => {
       maximumFractionDigits: 0,
     }).format(rolimonData.value);
     
-    const robuxValue = `R$ ${formattedValue}`;
+    const robuxValue = `R$${formattedValue}`;
 
     const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
 
     const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
 
-    const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${robuxValue}`);
+    const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   ${robuxValue}`);
     
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
