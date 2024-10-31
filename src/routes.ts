@@ -99,7 +99,7 @@ router.get('/users/:userId/profile', async (req, res) => {
 
     const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
 
-    const statsText = encodeURIComponent(`👥 ${formattedFriends}   👀 ${formattedFollowers}   💰 ${formattedValue}`);
+    const statsText = encodeURIComponent(`👥 ${formattedFriends}   👤 ${formattedFollowers}   🪙 ${formattedValue}`);
     
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
