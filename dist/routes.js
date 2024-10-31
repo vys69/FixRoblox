@@ -47,7 +47,11 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
             (0, api_1.fetchRolimonData)(userId)
         ]);
         // Create stats text with emojis
-        const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${rolimonData.rap}`);
+        const formattedValue = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(rolimonData.value);
+        const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${formattedValue}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">

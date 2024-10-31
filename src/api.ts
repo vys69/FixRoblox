@@ -107,7 +107,7 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
 
 export async function fetchRolimonData(userId: string): Promise<RolimonData> {
   try {
-    const response = await axios.get(`https://www.rolimons.com/playerapi/player/${userId}`, { timeout: 5000 });
+    const response = await axios.get(`https://api.rolimons.com/players/v1/playerinfo/${userId}`, { timeout: 5000 });
     return {
       rap: response.data.rap || 0,
       value: response.data.value || 0

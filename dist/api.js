@@ -149,7 +149,7 @@ exports.fetchRobloxGroupId = fetchRobloxGroupId;
 function fetchRolimonData(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield axios_1.default.get(`https://www.rolimons.com/playerapi/player/${userId}`, { timeout: 5000 });
+            const response = yield axios_1.default.get(`https://api.rolimons.com/players/v1/playerinfo/${userId}`, { timeout: 5000 });
             return {
                 rap: response.data.rap || 0,
                 value: response.data.value || 0
