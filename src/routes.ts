@@ -56,7 +56,7 @@ router.get('/users/:userId/profile', async (req, res) => {
     ]);
 
     // Create stats text with emojis
-    const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}`);
+    const statsText = encodeURIComponent(`👥 ${friendsData.count}   👀 ${followersData.count}   💰 ${rolimonData.rap}`);
     
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
