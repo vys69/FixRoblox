@@ -82,12 +82,14 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
         ]);
         // Create stats text with emojis
         const formattedValue = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
+            style: 'decimal',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
         }).format(rolimonData.value);
+        const robuxValue = `R$ ${formattedValue}`;
         const formattedFriends = new Intl.NumberFormat('en-US').format(friendsData.count);
         const formattedFollowers = new Intl.NumberFormat('en-US').format(followersData.count);
-        const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${formattedValue}`);
+        const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${robuxValue}`);
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
