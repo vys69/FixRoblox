@@ -20,15 +20,25 @@ const page = `
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Fix Roblox</title>
-      <meta property="og:title" content="Fix Roblox">
-      <meta property="og:description" content="Fix Roblox embeds">
-      <meta property="og:image" content="https://raw.githubusercontent.com/vys69/Rxblox2/refs/heads/master/public/ogimage.jpg>
+      <title>FixRoblox - Better Roblox Embeds</title>
+
+      <!-- OpenGraph Meta Tags -->
+      <meta property="og:title" content="FixRoblox - Better Roblox Embeds">
+      <meta property="og:description" content="Transform your Roblox links into rich embeds for Discord. Just add 'fix' before any roblox.com URL to get beautiful previews for profiles, groups, items, and more!">
+      <meta property="og:image" content="https://raw.githubusercontent.com/vys69/Rxblox2/refs/heads/master/public/ogimage.jpg">
       <meta property="og:url" content="https://fixroblox.com">
-      <meta name="twitter:card" content="summary">
-      <meta name="twitter:title" content="Fix Roblox">
-      <meta name="twitter:description" content="Fix Roblox embeds">
-      <meta name="twitter:image" content="https://fixroblox.com/assets/logo.png">
+      <meta property="og:type" content="website">
+
+      <!-- Twitter Meta Tags -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="FixRoblox - Better Roblox Embeds">
+      <meta name="twitter:description" content="Transform your Roblox links into rich embeds for Discord. Just add 'fix' before any roblox.com URL to get beautiful previews for profiles, groups, items, and more!">
+      <meta name="twitter:image" content="https://raw.githubusercontent.com/vys69/Rxblox2/refs/heads/master/public/ogimage.jpg">
+
+      <!-- Additional Meta Tags -->
+      <meta name="theme-color" content="#2d79c7">
+      <meta name="keywords" content="Roblox, Discord, embeds, link preview, profile preview">
+      <meta name="author" content="grim">
    </head>
    <body style="gap: 5px; background-color: #121212; color: #FFFFFF; font-family: helvetica, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;">
       <h1 style="margin: 0; text-align: center;">roblox embeds suck... 🤮🤧</h1>
