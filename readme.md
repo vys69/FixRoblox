@@ -5,13 +5,13 @@
 ## Embed Roblox profiles, bundles, groups, games, & more on Discord, Telegram, and others!
 ### Roblox links don't embed on discord *whatsoever*... but now they do 😏
 
-### Just add `rx` before your `roblox.com` link to make it `rxroblox.com`
+### Just add `fix` before your `roblox.com` link to make it `fixroblox.com`
 
 ## Embed Profiles
 
-Easily share Roblox user profiles with rich embeds, including avatar images, friend counts, and more.
+Easily share Roblox user profiles with rich embeds, including avatar images, friend counts, inventory value and more.
 
-![image](https://github.com/user-attachments/assets/689b025e-52ab-40a8-aa28-f5f92dfa877e)
+![image](https://github.com/user-attachments/assets/e6686339-7fbe-4a83-9b92-5b37048ff50c)
 
 ## Embed Groups
 
@@ -42,3 +42,8 @@ Feel free to [open an issue](https://github.com/YourGitHubUsername/FixRoblox/iss
 ## Disclaimer
 
 Roblox is a trademark of Roblox Corporation. This project is not affiliated with or endorsed by Roblox Corporation.
+
+## Credits
+- [Rolimons API](https://www.rolimons.com/)
+- [Roblox API](https://devforum.roblox.com/t/all-of-robloxs-apis/2290645)
+- [matthewdean/roblox-web-apis](https://github.com/matthewdean/roblox-web-apis)
