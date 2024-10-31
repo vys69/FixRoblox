@@ -63,3 +63,8 @@ export interface CatalogItemResponse {
   nextPageCursor: string | null;
   data: CatalogItem[];
 }
+
+export interface RolimonData {
+  rap: number;
+  value: number;
+}

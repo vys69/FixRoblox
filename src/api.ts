@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem, BundleItem } from './types';
+import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem, BundleItem, RolimonData } from './types';
 
 const API_TIMEOUT = 5000;
 
@@ -102,6 +102,19 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
   } catch (error) {
     console.error('Error fetching group ID:', error);
     throw new Error('Failed to fetch group ID');
+  }
+}
+
+export async function fetchRolimonData(userId: string): Promise<RolimonData> {
+  try {
+    const response = await axios.get(`https://www.rolimons.com/playerapi/player/${userId}`, { timeout: 5000 });
+    return {
+      rap: response.data.rap || 0,
+      value: response.data.value || 0
+    };
+  } catch (error) {
+    console.error('Error fetching Rolimon data:', error);
+    return { rap: 0, value: 0 }; // Return default values on error
   }
 }
 

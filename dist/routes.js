@@ -39,13 +39,15 @@ router.get('/', (req, res) => {
 router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
     try {
-        const [userData, friendsData, followersData, avatarUrl] = yield Promise.all([
+        const [userData, friendsData, followersData, avatarUrl, rolimonData] = yield Promise.all([
             (0, api_1.fetchRobloxUserData)(userId),
             (0, api_1.fetchRobloxFriends)(userId),
             (0, api_1.fetchRobloxFollowers)(userId),
-            (0, api_1.fetchRobloxAvatar)(userId)
+            (0, api_1.fetchRobloxAvatar)(userId),
+            (0, api_1.fetchRolimonData)(userId)
         ]);
         const metaTags = `
+      <meta property="og:site_name" content="💰 - RAP: ${rolimonData.rap} 💰 - VAL: ${rolimonData.value} Friends: ${friendsData.count} Followers: ${followersData.count}">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
       <meta property="og:description" content="${userData.description || 'No description available'}">
       <meta property="og:image" content="${avatarUrl}">

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createErrorMetaTags = exports.fetchBundleData = exports.fetchCatalogItemData = exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
+exports.createErrorMetaTags = exports.fetchBundleData = exports.fetchCatalogItemData = exports.fetchRolimonData = exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
 const axios_1 = __importDefault(require("axios"));
 const API_TIMEOUT = 5000;
 function fetchRobloxUserData(userId) {
@@ -146,6 +146,22 @@ function fetchRobloxGroupId(groupId) {
     });
 }
 exports.fetchRobloxGroupId = fetchRobloxGroupId;
+function fetchRolimonData(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://www.rolimons.com/playerapi/player/${userId}`, { timeout: 5000 });
+            return {
+                rap: response.data.rap || 0,
+                value: response.data.value || 0
+            };
+        }
+        catch (error) {
+            console.error('Error fetching Rolimon data:', error);
+            return { rap: 0, value: 0 }; // Return default values on error
+        }
+    });
+}
+exports.fetchRolimonData = fetchRolimonData;
 function fetchCatalogItemData(itemId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

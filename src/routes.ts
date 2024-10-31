@@ -7,7 +7,9 @@ import {
   fetchRobloxGroupData,
   fetchCatalogItemData,
   fetchBundleData,
+  fetchRolimonData,
   createErrorMetaTags
+
 } from './api';
 
 const router = Router();
@@ -45,14 +47,16 @@ router.get('/users/:userId/profile', async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const [userData, friendsData, followersData, avatarUrl] = await Promise.all([
+    const [userData, friendsData, followersData, avatarUrl, rolimonData] = await Promise.all([
       fetchRobloxUserData(userId),
       fetchRobloxFriends(userId),
       fetchRobloxFollowers(userId),
-      fetchRobloxAvatar(userId)
+      fetchRobloxAvatar(userId),
+      fetchRolimonData(userId)
     ]);
 
     const metaTags = `
+      <meta property="og:site_name" content="💰 - RAP: ${rolimonData.rap} 💰 - VAL: ${rolimonData.value} Friends: ${friendsData.count} Followers: ${followersData.count}">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
       <meta property="og:description" content="${userData.description || 'No description available'}">
       <meta property="og:image" content="${avatarUrl}">
