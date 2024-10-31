@@ -58,6 +58,7 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
       <meta name="twitter:image" content="${avatarUrl}">
       <meta name="roblox:friends" content="${friendsData.count}">
       <meta name="roblox:followers" content="${followersData.count}">
+      <meta property="og:fields" content="💬 128 🔁 1.5K ❤️ 58.5K 👁️ 2.88M">
     `;
         const html = `
       <!DOCTYPE html>
