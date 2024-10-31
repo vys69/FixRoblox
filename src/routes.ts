@@ -62,7 +62,7 @@ router.get('/users/:userId/profile', async (req, res) => {
       <meta property="og:image" content="${avatarUrl}">
       <meta property="og:url" content="https://www.roblox.com/users/${userId}/profile">
       <meta name="twitter:card" content="summary">
-      <meta name="twitter:title" content="${userData.displayName} (@${userData.name})">
+      <meta name="twitter:title" content="**${userData.displayName} (@${userData.name})**">
       <meta name="twitter:description" content="${userData.description || 'No description available'}">
       <meta name="twitter:image" content="${avatarUrl}">
       <meta name="roblox:friends" content="${friendsData.count}">
