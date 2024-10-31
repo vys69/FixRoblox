@@ -47,7 +47,7 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
             (0, api_1.fetchRolimonData)(userId)
         ]);
         const metaTags = `
-      <meta property="og:site_name" content="💰 - RAP: ${rolimonData.rap} 💰 - VAL: ${rolimonData.value} Friends: ${friendsData.count} Followers: ${followersData.count}">
+      <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
       <meta property="og:description" content="${userData.description || 'No description available'}">
       <meta property="og:image" content="${avatarUrl}">
@@ -58,7 +58,8 @@ router.get('/users/:userId/profile', (req, res) => __awaiter(void 0, void 0, voi
       <meta name="twitter:image" content="${avatarUrl}">
       <meta name="roblox:friends" content="${friendsData.count}">
       <meta name="roblox:followers" content="${followersData.count}">
-      <meta property="og:fields" content="💬 128 🔁 1.5K ❤️ 58.5K 👁️ 2.88M">
+      <link rel="alternate" href="https://fxtwitter.com/owoembed?text=%F0%9F%92%AC%2011.8K%20%20%20%F0%9F%94%81%2020.2K%20%20%20%E2%9D%A4%EF%B8%8F%20403.4K&status=1355276142262050817&author=jonstewart" type="application/json+oembed" title="Jon Stewart">
+
     `;
         const html = `
       <!DOCTYPE html>
