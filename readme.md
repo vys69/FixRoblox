@@ -1,6 +1,6 @@
 # FixRoblox <img src="https://abs-0.twimg.com/emoji/v2/svg/1f527.svg" height="28">
 
-![fixroblox](https://github.com/user-attachments/assets/e32b0618-ec5a-4985-a6db-3b6aab37625c)
+![ogimage (1)](https://github.com/user-attachments/assets/0710f8fa-171a-4afd-ac82-bc53a7381648)
 
 ## Embed Roblox profiles, bundles, groups, games, & more on Discord, Telegram, and others!
 ### Roblox links don't embed on discord *whatsoever*... but now they do 😏
