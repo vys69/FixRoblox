@@ -184,7 +184,7 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
       ███    ███    ███  ▐███      ███    ███ ███       ███    ███    ███  ▐███    
     ▄███▄▄▄▄██▀    ▀███▄███▀     ▄███▄▄▄██▀  ███       ███    ███    ▀███▄███▀    
     ▀▀███▀▀▀▀▀      ████▀██▄     ▀▀███▀▀▀██▄  ███       ███    ███    ████▀██▄     
-    ▀███████████   ▐███  ▀███      █��█    ██▄ ███       ███    ███   ▐███  ▀███    
+    ▀███████████   ▐███  ▀███      █    ██▄ ███       ███    ███   ▐███  ▀███    
       ███    ███   ████    ███▄   ▄█████████▀ █████▄▄██  ▀██████▀   ████       ███▄
       ███    ███  
       ███    ███  fixroblox.com
@@ -344,12 +344,18 @@ router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
   }
 });
 
-router.get('/games/:gameId', async (req, res) => {
-  const gameId = req.params.gameId;
+router.get('/games/:gameId/:gameName?', async (req, res) => {
+  const { gameId, gameName } = req.params;
 
   try {
     const gameData = await fetchRobloxGameData(gameId);
     
+    // Check if the provided gameName matches the fetched data
+    const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
+    if (gameName !== encodedGameName) {
+      return res.redirect(`/games/${gameId}/${encodedGameName}`);
+    }
+
     // Construct game thumbnail URL
     const thumbnailUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
 
@@ -357,7 +363,7 @@ router.get('/games/:gameId', async (req, res) => {
       <meta property="og:title" content="${gameData.name}">
       <meta property="og:description" content="${gameData.description || 'No description available'}">
       <meta property="og:image" content="${thumbnailUrl}">
-      <meta property="og:url" content="${gameData.url}">
+      <meta property="og:url" content="https://www.roblox.com/games/${gameId}/${encodedGameName}">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="${gameData.name}">
       <meta name="twitter:description" content="${gameData.description || 'No description available'}">
@@ -378,7 +384,7 @@ router.get('/games/:gameId', async (req, res) => {
       </head>
       <body>
         <script>
-          window.location.href = "${gameData.url}";
+          window.location.href = "https://www.roblox.com/games/${gameId}/${encodedGameName}";
         </script>
       </body>
       </html>
