@@ -347,74 +347,18 @@ router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, 
         res.status(500).send('Error fetching Roblox data');
     }
 }));
-router.get('/oembed', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { text, status, author, type } = req.query;
-    if (!text || !status || !author) {
-        return res.status(400).json({ error: 'Missing required parameters' });
-    }
-    try {
-        let title, url;
-        if (type === 'game') {
-            title = `${author}`;
-            url = `https://www.roblox.com/games/${status}`;
-        }
-        else {
-            title = `@${author}`;
-            url = `https://www.roblox.com/users/${status}/profile`;
-        }
-        const response = {
-            type: 'rich',
-            version: '1.0',
-            title,
-            author_name: 'FixRoblox / Rxblox',
-            author_url: 'https://rxblox.vercel.app',
-            provider_name: 'Roblox',
-            provider_url: 'https://www.roblox.com',
-            width: 400,
-            height: 100,
-            html: `
-        <div style="
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-          border: 1px solid #e3e3e3;
-          border-radius: 8px;
-          padding: 12px;
-          max-width: 400px;
-        ">
-          <div style="
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-          ">
-            <span style="
-              font-size: 14px;
-              color: #666;
-              text-decoration: none;
-            ">${title}</span>
-          </div>
-          <div style="
-            font-size: 14px;
-            color: #1a1a1a;
-            line-height: 1.4;
-          ">${decodeURIComponent(text)}</div>
-          <div style="
-            margin-top: 8px;
-            font-size: 12px;
-          ">
-            <a href="${url}" target="_blank" style="
-              color: #666;
-              text-decoration: none;
-            ">View on Roblox →</a>
-          </div>
-        </div>
-      `
-        };
-        res.setHeader('Cache-Control', 'public, max-age=3600');
-        return res.json(response);
-    }
-    catch (error) {
-        console.error('Error generating oembed:', error);
-        return res.status(500).json({ error: 'Failed to generate oembed' });
-    }
-}));
+router.get('/oembed', (req, res) => {
+    const { text, status, author } = req.query;
+    const oembedResponse = {
+        author_name: decodeURIComponent(text),
+        author_url: `https://www.roblox.com/users/${status}/profile`,
+        provider_name: "FixRoblox / RxBlox",
+        provider_url: "https://fixroblox.com",
+        title: `${author}'s Roblox Profile`,
+        type: "link",
+        version: "1.0",
+    };
+    res.json(oembedResponse);
+});
 exports.default = router;
 //# sourceMappingURL=routes.js.map
