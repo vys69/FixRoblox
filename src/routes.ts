@@ -8,7 +8,8 @@ import {
   fetchCatalogItemData,
   fetchBundleData,
   fetchRolimonData,
-  createErrorMetaTags
+  createErrorMetaTags,
+  fetchRobloxGroupIcon
 
 } from './api';
 
@@ -150,24 +151,25 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
   let groupName = req.params.groupName || '';
 
   try {
-    const groupData = await fetchRobloxGroupData(groupId);
+    const [groupData, groupIcon] = await Promise.all([
+      fetchRobloxGroupData(groupId),
+      fetchRobloxGroupIcon(groupId)
+    ]);
 
     // If groupName wasn't provided in the URL or doesn't match, use the fetched name
     if (!groupName || groupName !== encodeURIComponent(groupData.name.replace(/\s+/g, '-'))) {
       groupName = encodeURIComponent(groupData.name.replace(/\s+/g, '-'));
     }
 
-    const groupIconUrl = `https://i.pinimg.com/736x/7e/a1/65/7ea165670bc9c0844337266b454e6a02.jpg`;  // Replace with actual group icon URL if available
-
     const metaTags = `
       <meta property="og:title" content="${groupData.name}">
       <meta property="og:description" content="${groupData.description || 'No description available'}">
-      <meta property="og:image" content="${groupIconUrl}">
+      <meta property="og:image" content="${groupIcon}">
       <meta property="og:url" content="https://www.roblox.com/groups/${groupId}/${groupName}">
       <meta name="twitter:card" content="summary">
       <meta name="twitter:title" content="${groupData.name}">
       <meta name="twitter:description" content="${groupData.description || 'No description available'}">
-      <meta name="twitter:image" content="${groupIconUrl}">
+      <meta name="twitter:image" content="${groupIcon}">
       <meta name="roblox:group:members" content="${groupData.memberCount}">
       <meta name="roblox:group:owner" content="${groupData.owner.displayName} (@${groupData.owner.username})">
     `;
