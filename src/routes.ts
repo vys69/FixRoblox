@@ -352,14 +352,14 @@ router.get('/games/:gameId/:gameName?', async (req, res) => {
     
     // Check if the provided gameName matches the fetched data
     const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
-    if (gameName !== encodedGameName) {
+    if (gameName && gameName !== encodedGameName) {
       return res.redirect(`/games/${gameId}/${encodedGameName}`);
     }
 
-    // Construct game thumbnail URL
     const thumbnailUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
 
     const metaTags = `
+      <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${gameData.name}">
       <meta property="og:description" content="${gameData.description || 'No description available'}">
       <meta property="og:image" content="${thumbnailUrl}">
@@ -379,7 +379,7 @@ router.get('/games/:gameId/:gameName?', async (req, res) => {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${gameData.name} - Roblox Game</title>
+        <title>${gameData.name} - Roblox</title>
         ${metaTags}
       </head>
       <body>
