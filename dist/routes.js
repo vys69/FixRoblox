@@ -310,26 +310,19 @@ router.get('/bundles/:bundleId/:bundleName', (req, res) => __awaiter(void 0, voi
     }
 }));
 router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { gameId, gameName } = req.params;
+    const gameId = req.params.gameId;
     try {
         const gameData = yield (0, api_1.fetchRobloxGameData)(gameId);
-        // Check if the provided gameName matches the fetched data
-        const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
-        if (gameName && gameName !== encodedGameName) {
-            return res.redirect(`/games/${gameId}/${encodedGameName}`);
-        }
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${gameData.name}">
       <meta property="og:description" content="${gameData.description || 'No description available'}">
       <meta property="og:image" content="${gameData.thumbnailUrl}">
-      <meta property="og:url" content="https://www.roblox.com/games/${gameId}/${encodedGameName}">
+      <meta property="og:url" content="https://www.roblox.com/games/${gameId}">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="${gameData.name}">
       <meta name="twitter:description" content="${gameData.description || 'No description available'}">
       <meta name="twitter:image" content="${gameData.thumbnailUrl}">
-      <meta name="roblox:game:builder" content="${gameData.builder}">
-      <meta name="roblox:game:price" content="${gameData.price === 0 ? 'Free' : `R$${gameData.price}`}">
     `;
         const html = `
       <!DOCTYPE html>
@@ -337,12 +330,12 @@ router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, 
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${gameData.name} - Roblox</title>
+        <title>${gameData.name}</title>
         ${metaTags}
       </head>
       <body>
         <script>
-          window.location.href = "https://www.roblox.com/games/${gameId}/${encodedGameName}";
+          window.location.href = "https://www.roblox.com/games/${gameId}";
         </script>
       </body>
       </html>
@@ -350,37 +343,78 @@ router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, 
         res.send(html);
     }
     catch (error) {
-        console.error('Error fetching Roblox game data:', error);
-        const errorHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error - Game Not Found</title>
-        ${(0, api_1.createErrorMetaTags)('The requested Roblox game could not be found.')}
-      </head>
-      <body>
-        <h1>Error: Game Not Found</h1>
-        <p>The requested Roblox game could not be found.</p>
-      </body>
-      </html>
-    `;
-        res.status(404).send(errorHtml);
+        console.error('Error fetching Roblox data:', error);
+        res.status(500).send('Error fetching Roblox data');
     }
 }));
-router.get('/oembed', (req, res) => {
-    const { text, status, author } = req.query;
-    const oembedResponse = {
-        author_name: decodeURIComponent(text),
-        author_url: `https://www.roblox.com/users/${status}/profile`,
-        provider_name: "FixRoblox / RxBlox",
-        provider_url: "https://fixroblox.com",
-        title: `${author}'s Roblox Profile`,
-        type: "link",
-        version: "1.0",
-    };
-    res.json(oembedResponse);
-});
+router.get('/oembed', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { text, status, author, type } = req.query;
+    if (!text || !status || !author) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    try {
+        let title, url;
+        if (type === 'game') {
+            title = `${author}`;
+            url = `https://www.roblox.com/games/${status}`;
+        }
+        else {
+            title = `@${author}`;
+            url = `https://www.roblox.com/users/${status}/profile`;
+        }
+        const response = {
+            type: 'rich',
+            version: '1.0',
+            title,
+            author_name: 'FixRoblox / Rxblox',
+            author_url: 'https://rxblox.vercel.app',
+            provider_name: 'Roblox',
+            provider_url: 'https://www.roblox.com',
+            width: 400,
+            height: 100,
+            html: `
+        <div style="
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          border: 1px solid #e3e3e3;
+          border-radius: 8px;
+          padding: 12px;
+          max-width: 400px;
+        ">
+          <div style="
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+          ">
+            <span style="
+              font-size: 14px;
+              color: #666;
+              text-decoration: none;
+            ">${title}</span>
+          </div>
+          <div style="
+            font-size: 14px;
+            color: #1a1a1a;
+            line-height: 1.4;
+          ">${decodeURIComponent(text)}</div>
+          <div style="
+            margin-top: 8px;
+            font-size: 12px;
+          ">
+            <a href="${url}" target="_blank" style="
+              color: #666;
+              text-decoration: none;
+            ">View on Roblox →</a>
+          </div>
+        </div>
+      `
+        };
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        return res.json(response);
+    }
+    catch (error) {
+        console.error('Error generating oembed:', error);
+        return res.status(500).json({ error: 'Failed to generate oembed' });
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=routes.js.map
