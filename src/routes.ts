@@ -346,13 +346,19 @@ router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
 
 router.get('/games/:gameId/:gameName?', async (req, res) => {
   const { gameId, gameName } = req.params;
+  console.log(`Route hit - gameId: ${gameId}, gameName: ${gameName}`);
 
   try {
     const gameData = await fetchRobloxGameData(gameId);
+    console.log('Game data fetched:', gameData);
     
     // Check if the provided gameName matches the fetched data
     const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
+    console.log(`Encoded game name: ${encodedGameName}`);
+    console.log(`Provided game name: ${gameName}`);
+    
     if (gameName && gameName !== encodedGameName) {
+      console.log('Redirecting to correct game name');
       return res.redirect(`/games/${gameId}/${encodedGameName}`);
     }
 

@@ -257,14 +257,18 @@ exports.createErrorMetaTags = createErrorMetaTags;
 function fetchRobloxGameData(gameId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(`Fetching game data for ID: ${gameId}`);
             const response = yield axios_1.default.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, { timeout: API_TIMEOUT });
+            console.log('API Response:', response.data);
+            // The API returns an array, so we need to get the first item
             if (!response.data[0]) {
+                console.log('No game data found in response');
                 throw new Error('Game not found');
             }
             return response.data[0];
         }
         catch (error) {
-            console.error('Error fetching game data:', error);
+            console.error('Detailed error:', error);
             throw new Error('Failed to fetch game data');
         }
     });

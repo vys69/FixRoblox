@@ -308,11 +308,16 @@ router.get('/bundles/:bundleId/:bundleName', (req, res) => __awaiter(void 0, voi
 }));
 router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { gameId, gameName } = req.params;
+    console.log(`Route hit - gameId: ${gameId}, gameName: ${gameName}`);
     try {
         const gameData = yield (0, api_1.fetchRobloxGameData)(gameId);
+        console.log('Game data fetched:', gameData);
         // Check if the provided gameName matches the fetched data
         const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
+        console.log(`Encoded game name: ${encodedGameName}`);
+        console.log(`Provided game name: ${gameName}`);
         if (gameName && gameName !== encodedGameName) {
+            console.log('Redirecting to correct game name');
             return res.redirect(`/games/${gameId}/${encodedGameName}`);
         }
         const thumbnailUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
