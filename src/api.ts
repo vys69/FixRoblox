@@ -204,10 +204,17 @@ export function createErrorMetaTags(errorMessage: string): string {
 export async function fetchRobloxGameData(gameId: string): Promise<RobloxGame> {
   try {
     console.log(`Fetching game data for ID: ${gameId}`);
-    const response = await axios.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, { timeout: API_TIMEOUT });
-    console.log('API Response:', response.data);
+    const response = await axios.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, {
+      timeout: API_TIMEOUT,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0',
+        'Referer': 'https://www.roblox.com/',
+        'Origin': 'https://www.roblox.com',
+        'Cookie': `.ROBLOSECURITY=${process.env.ROBLOSECURITY}`
+      }
+    });
     
-    // The API returns an array, so we need to get the first item
     if (!response.data[0]) {
       console.log('No game data found in response');
       throw new Error('Game not found');
