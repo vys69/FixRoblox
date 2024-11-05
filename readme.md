@@ -11,13 +11,19 @@
 
 Easily share Roblox user profiles with rich embeds, including avatar images, friend counts, inventory value and account creation date.
 
-![image](https://github.com/user-attachments/assets/426865d5-aec4-40ab-a715-86d17d3a73a4)
+![image](https://github.com/user-attachments/assets/f77d87e4-d283-4df1-b74c-8740a5d2ca79)
+
+## Embed Games (votes & player counts coming soon!)
+
+![image](https://github.com/user-attachments/assets/78786222-abce-4e7a-90a9-1b14b757f7bc)
+
+Share Roblox games with detailed information, including player counts, description, up & downvotes, and more.
 
 ## Embed Groups
 
 Share Roblox groups with detailed information, including member counts, descriptions, and group icons.
 
-![image](https://github.com/user-attachments/assets/30b21d1e-b150-4fe1-af9b-b0fed551e763)
+![image](https://github.com/user-attachments/assets/c0d642cb-39e6-4696-84c4-e8db397fd49e)
 
 ## Embed Bundles
 
@@ -25,15 +31,11 @@ Showcase Roblox bundles with images, descriptions, and pricing information.
 
 ![image](https://github.com/user-attachments/assets/54e45391-2552-41b4-80ac-4547f7e03a77)
 
-## Embed Catalog Items (Thumbnails coming soon!)
+## Embed Catalog Items (thumbnails coming soon!)
 
 We're working on bringing you rich embeds for Roblox catalog items. Stay tuned!
 
 ![image](https://github.com/user-attachments/assets/06b4eca8-56dc-4ec5-85c0-f7f50916cbef)
-
-## Embed Games (Coming soon!)
-
-Game embeds are on the way! Soon you'll be able to share Roblox games with detailed information and thumbnails.
 
 ## Bugs or issues?
 
