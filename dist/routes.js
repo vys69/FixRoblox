@@ -154,16 +154,19 @@ router.get('/groups/:groupId/:groupName?', (req, res) => __awaiter(void 0, void 
       <!DOCTYPE html>
       <html lang="en">
       <!--
-      ▄████████
-      ███    ███ ▀████    ▐████▀ ▀█████████▄   ▄█        ▄██████▄  ▀████    ▐████▀  
+
+      ▄████████ ▀████    ▐████▀ ▀█████████▄   ▄█        ▄██████▄  ▀████    ▐████▀ 
+      ███    ███   ███▌   ████▀    ███    ███ ███       ███    ███   ███▌   ████▀  
       ███    ███    ███  ▐███      ███    ███ ███       ███    ███    ███  ▐███    
     ▄███▄▄▄▄██▀    ▀███▄███▀     ▄███▄▄▄██▀  ███       ███    ███    ▀███▄███▀    
     ▀▀███▀▀▀▀▀      ████▀██▄     ▀▀███▀▀▀██▄  ███       ███    ███    ████▀██▄     
-    ▀███████████   ▐███  ▀███      █    ██▄ ███       ███    ███   ▐███  ▀███    
-      ███    ███   ████    ███▄   ▄█████████▀ █████▄▄██  ▀██████▀   ████       ███▄
-      ███    ███  
+    ▀███████████   ▐███  ▀███      ███    ██▄ ███       ███    ███   ▐███  ▀███    
+      ███    ███  ▄███     ███▄    ███    ███ ███▌    ▄ ███    ███  ▄███     ███▄  
+      ███    ███ ████       ███▄ ▄█████████▀  █████▄▄██  ▀██████▀  ████       ███▄ 
+      ███    ███                              ▀                                    
       ███    ███  fixroblox.com
                   A better way to embed Roblox links on Discord
+                  
       -->
       <head>
         <meta charset="UTF-8">
@@ -308,32 +311,25 @@ router.get('/bundles/:bundleId/:bundleName', (req, res) => __awaiter(void 0, voi
 }));
 router.get('/games/:gameId/:gameName?', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { gameId, gameName } = req.params;
-    console.log(`Route hit - gameId: ${gameId}, gameName: ${gameName}`);
     try {
         const gameData = yield (0, api_1.fetchRobloxGameData)(gameId);
-        console.log('Game data fetched:', gameData);
         // Check if the provided gameName matches the fetched data
         const encodedGameName = encodeURIComponent(gameData.name.replace(/\s+/g, '-'));
-        console.log(`Encoded game name: ${encodedGameName}`);
-        console.log(`Provided game name: ${gameName}`);
         if (gameName && gameName !== encodedGameName) {
-            console.log('Redirecting to correct game name');
             return res.redirect(`/games/${gameId}/${encodedGameName}`);
         }
-        const thumbnailUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
         const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${gameData.name}">
       <meta property="og:description" content="${gameData.description || 'No description available'}">
-      <meta property="og:image" content="${thumbnailUrl}">
+      <meta property="og:image" content="${gameData.thumbnailUrl}">
       <meta property="og:url" content="https://www.roblox.com/games/${gameId}/${encodedGameName}">
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:title" content="${gameData.name}">
       <meta name="twitter:description" content="${gameData.description || 'No description available'}">
-      <meta name="twitter:image" content="${thumbnailUrl}">
+      <meta name="twitter:image" content="${gameData.thumbnailUrl}">
       <meta name="roblox:game:builder" content="${gameData.builder}">
       <meta name="roblox:game:price" content="${gameData.price === 0 ? 'Free' : `R$${gameData.price}`}">
-      ${gameData.hasVerifiedBadge ? '<meta name="roblox:game:verified" content="true">' : ''}
     `;
         const html = `
       <!DOCTYPE html>

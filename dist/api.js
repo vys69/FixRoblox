@@ -254,28 +254,56 @@ function createErrorMetaTags(errorMessage) {
   `;
 }
 exports.createErrorMetaTags = createErrorMetaTags;
+function fetchGameThumbnail(gameId) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://www.roblox.com/item-thumbnails?params=[{assetId:${gameId}}]`);
+            if ((_a = response.data[0]) === null || _a === void 0 ? void 0 : _a.thumbnailUrl) {
+                return response.data[0].thumbnailUrl;
+            }
+            throw new Error('Thumbnail not found');
+        }
+        catch (error) {
+            console.error('Error fetching thumbnail:', error);
+            return `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
+        }
+    });
+}
 function fetchRobloxGameData(gameId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(`Fetching game data for ID: ${gameId}`);
-            const response = yield axios_1.default.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, {
-                timeout: API_TIMEOUT,
-                headers: {
-                    'Accept': 'application/json',
-                    'User-Agent': 'Mozilla/5.0',
-                    'Referer': 'https://www.roblox.com/',
-                    'Origin': 'https://www.roblox.com',
-                    'Cookie': `.ROBLOSECURITY=${process.env.roblosecurity}`
-                }
-            });
-            if (!response.data[0]) {
-                console.log('No game data found in response');
+            console.log(`[Game API] Fetching game data for ID: ${gameId}`);
+            if (!process.env.ROBLOSECURITY) {
+                console.error('[Game API] CRITICAL: ROBLOSECURITY environment variable is not set!');
+                throw new Error('Authentication required');
+            }
+            // Fetch both game data and thumbnail in parallel
+            const [gameResponse, thumbnailUrl] = yield Promise.all([
+                axios_1.default.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, {
+                    timeout: API_TIMEOUT,
+                    headers: {
+                        'Accept': 'application/json',
+                        'User-Agent': 'Mozilla/5.0',
+                        'Referer': 'https://www.roblox.com/',
+                        'Origin': 'https://www.roblox.com',
+                        'Cookie': `.ROBLOSECURITY=${process.env.ROBLOSECURITY}`
+                    }
+                }),
+                fetchGameThumbnail(gameId)
+            ]);
+            console.log('[Game API] Game response:', gameResponse.data);
+            console.log('[Game API] Thumbnail URL:', thumbnailUrl);
+            if (!gameResponse.data[0]) {
+                console.log('[Game API] No game data found in response');
                 throw new Error('Game not found');
             }
-            return response.data[0];
+            const gameData = Object.assign(Object.assign({}, gameResponse.data[0]), { thumbnailUrl });
+            console.log('[Game API] Final game data:', gameData);
+            return gameData;
         }
         catch (error) {
-            console.error('Detailed error:', error);
+            console.error('[Game API] Detailed error:', error);
             throw new Error('Failed to fetch game data');
         }
     });

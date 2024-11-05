@@ -81,6 +81,12 @@ export interface RobloxUserData {
   displayName: string;
 }
 
+export interface GameThumbnailResponse {
+  id: number;
+  thumbnailUrl: string;
+  name: string;
+}
+
 export interface RobloxGame {
   placeId: number;
   name: string;
@@ -97,4 +103,5 @@ export interface RobloxGame {
   universeRootPlaceId: number;
   price: number;
   imageToken: string;
+  thumbnailUrl?: string;
 }
