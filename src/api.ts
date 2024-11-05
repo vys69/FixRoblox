@@ -105,6 +105,17 @@ export async function fetchRobloxGroupId(groupId: string): Promise<number> {
   }
 }
 
+export async function fetchRobloxGroupIcon(groupId: string): Promise<string> {
+  try {
+    const response = await axios.get(`https://thumbnails.roblox.com/v1/groups/icons?groupIds=${groupId}&size=420x420&format=Png&isCircular=false`, { timeout: API_TIMEOUT });
+    return response.data.data[0].imageUrl;
+  } catch (error) {
+    console.error('Error fetching group icon:', error);
+    // Return a fallback image URL if the request fails
+    return `https://www.roblox.com/group-thumbnails/image?groupId=${groupId}&width=420&height=420`;
+  }
+}
+
 export async function fetchRolimonData(userId: string): Promise<RolimonData> {
   try {
     const response = await axios.get(`https://api.rolimons.com/players/v1/playerinfo/${userId}`, { timeout: 5000 });
