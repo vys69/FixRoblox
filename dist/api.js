@@ -265,7 +265,7 @@ function fetchRobloxGameData(gameId) {
                     'User-Agent': 'Mozilla/5.0',
                     'Referer': 'https://www.roblox.com/',
                     'Origin': 'https://www.roblox.com',
-                    'Cookie': `.ROBLOSECURITY=${process.env.ROBLOSECURITY}`
+                    'Cookie': `.ROBLOSECURITY=${process.env.roblosecurity}`
                 }
             });
             if (!response.data[0]) {
