@@ -9,7 +9,8 @@ import {
   fetchBundleData,
   fetchRolimonData,
   createErrorMetaTags,
-  fetchRobloxGroupIcon
+  fetchRobloxGroupIcon,
+  fetchRobloxGameData
 
 } from './api';
 
@@ -183,7 +184,7 @@ router.get('/groups/:groupId/:groupName?', async (req, res) => {
       ███    ███    ███  ▐███      ███    ███ ███       ███    ███    ███  ▐███    
     ▄███▄▄▄▄██▀    ▀███▄███▀     ▄███▄▄▄██▀  ███       ███    ███    ▀███▄███▀    
     ▀▀███▀▀▀▀▀      ████▀██▄     ▀▀███▀▀▀██▄  ███       ███    ███    ████▀██▄     
-    ▀███████████   ▐███  ▀███      ███    ██▄ ███       ███    ███   ▐███  ▀███    
+    ▀███████████   ▐███  ▀███      █��█    ██▄ ███       ███    ███   ▐███  ▀███    
       ███    ███   ████    ███▄   ▄█████████▀ █████▄▄██  ▀██████▀   ████       ███▄
       ███    ███  
       ███    ███  fixroblox.com
@@ -336,6 +337,68 @@ router.get('/bundles/:bundleId/:bundleName', async (req, res) => {
       <body>
         <h1>Error: Bundle Not Found</h1>
         <p>The requested Roblox bundle could not be found.</p>
+      </body>
+      </html>
+    `;
+    res.status(404).send(errorHtml);
+  }
+});
+
+router.get('/games/:gameId', async (req, res) => {
+  const gameId = req.params.gameId;
+
+  try {
+    const gameData = await fetchRobloxGameData(gameId);
+    
+    // Construct game thumbnail URL
+    const thumbnailUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${gameId}&width=768&height=432&format=png`;
+
+    const metaTags = `
+      <meta property="og:title" content="${gameData.name}">
+      <meta property="og:description" content="${gameData.description || 'No description available'}">
+      <meta property="og:image" content="${thumbnailUrl}">
+      <meta property="og:url" content="${gameData.url}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${gameData.name}">
+      <meta name="twitter:description" content="${gameData.description || 'No description available'}">
+      <meta name="twitter:image" content="${thumbnailUrl}">
+      <meta name="roblox:game:builder" content="${gameData.builder}">
+      <meta name="roblox:game:price" content="${gameData.price === 0 ? 'Free' : `R$${gameData.price}`}">
+      ${gameData.hasVerifiedBadge ? '<meta name="roblox:game:verified" content="true">' : ''}
+    `;
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${gameData.name} - Roblox Game</title>
+        ${metaTags}
+      </head>
+      <body>
+        <script>
+          window.location.href = "${gameData.url}";
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error fetching Roblox game data:', error);
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Game Not Found</title>
+        ${createErrorMetaTags('The requested Roblox game could not be found.')}
+      </head>
+      <body>
+        <h1>Error: Game Not Found</h1>
+        <p>The requested Roblox game could not be found.</p>
       </body>
       </html>
     `;

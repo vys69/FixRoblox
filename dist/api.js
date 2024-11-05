@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createErrorMetaTags = exports.fetchBundleData = exports.fetchCatalogItemData = exports.fetchRolimonData = exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
+exports.fetchRobloxGameData = exports.createErrorMetaTags = exports.fetchBundleData = exports.fetchCatalogItemData = exports.fetchRolimonData = exports.fetchRobloxGroupIcon = exports.fetchRobloxGroupId = exports.fetchRobloxGroupOwner = exports.fetchRobloxGroupMemberCount = exports.fetchRobloxGroupDescription = exports.fetchRobloxGroupName = exports.fetchRobloxGroupData = exports.fetchRobloxAvatar = exports.fetchRobloxFollowers = exports.fetchRobloxFriends = exports.fetchRobloxUserData = void 0;
 const axios_1 = __importDefault(require("axios"));
 const API_TIMEOUT = 5000;
 function fetchRobloxUserData(userId) {
@@ -146,6 +146,20 @@ function fetchRobloxGroupId(groupId) {
     });
 }
 exports.fetchRobloxGroupId = fetchRobloxGroupId;
+function fetchRobloxGroupIcon(groupId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://thumbnails.roblox.com/v1/groups/icons?groupIds=${groupId}&size=420x420&format=Png&isCircular=false`, { timeout: API_TIMEOUT });
+            return response.data.data[0].imageUrl;
+        }
+        catch (error) {
+            console.error('Error fetching group icon:', error);
+            // Return a fallback image URL if the request fails
+            return `https://www.roblox.com/group-thumbnails/image?groupId=${groupId}&width=420&height=420`;
+        }
+    });
+}
+exports.fetchRobloxGroupIcon = fetchRobloxGroupIcon;
 function fetchRolimonData(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -240,4 +254,20 @@ function createErrorMetaTags(errorMessage) {
   `;
 }
 exports.createErrorMetaTags = createErrorMetaTags;
+function fetchRobloxGameData(gameId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield axios_1.default.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, { timeout: API_TIMEOUT });
+            if (!response.data[0]) {
+                throw new Error('Game not found');
+            }
+            return response.data[0];
+        }
+        catch (error) {
+            console.error('Error fetching game data:', error);
+            throw new Error('Failed to fetch game data');
+        }
+    });
+}
+exports.fetchRobloxGameData = fetchRobloxGameData;
 //# sourceMappingURL=api.js.map

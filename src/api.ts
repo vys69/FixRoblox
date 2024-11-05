@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem, BundleItem, RolimonData } from './types';
+import { RobloxUser, RobloxFriends, RobloxFollowers, RobloxGroup, RobloxGroupOwner, CatalogItemResponse, CatalogItem, BundleItem, RolimonData, RobloxGame } from './types';
 
 const API_TIMEOUT = 5000;
 
@@ -199,4 +199,17 @@ export function createErrorMetaTags(errorMessage: string): string {
     <meta name="twitter:description" content="${errorMessage}">
     <meta name="twitter:image" content="https://rxblox.com/error-image.png">
   `;
+}
+
+export async function fetchRobloxGameData(gameId: string): Promise<RobloxGame> {
+  try {
+    const response = await axios.get(`https://games.roblox.com/v1/games/multiget-place-details?placeIds=${gameId}`, { timeout: API_TIMEOUT });
+    if (!response.data[0]) {
+      throw new Error('Game not found');
+    }
+    return response.data[0];
+  } catch (error) {
+    console.error('Error fetching game data:', error);
+    throw new Error('Failed to fetch game data');
+  }
 }
