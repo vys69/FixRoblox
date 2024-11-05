@@ -97,13 +97,25 @@ router.get('/users/:userId/profile', async (req, res) => {
 
     const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${robuxValue}   📅 ${createdYear}`);
     
+    // Check for video URL in description
+    const videoMatch = userData.description?.match(/fxrblx=(https?:\/\/[^\s]+)/i);
+    const hasVideo = videoMatch && videoMatch[1];
+    
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
       <meta property="og:description" content="${userData.description || 'No description available'}">
+      ${hasVideo ? `
+      <meta property="og:video" content="${videoMatch[1]}">
+      <meta property="og:video:secure_url" content="${videoMatch[1]}">
+      <meta property="og:video:type" content="video/mp4">
+      <meta property="og:type" content="video">
+      ` : `
       <meta property="og:image" content="${avatarUrl}">
+      <meta property="og:type" content="website">
+      `}
       <meta property="og:url" content="https://www.roblox.com/users/${userId}/profile">
-      <meta name="twitter:card" content="summary">
+      <meta name="twitter:card" content="${hasVideo ? 'player' : 'summary'}">
       <meta name="twitter:title" content="${userData.displayName} (@${userData.name})">
       <meta name="twitter:description" content="${userData.description || 'No description available'}">
       <meta name="twitter:image" content="${avatarUrl}">
