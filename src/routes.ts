@@ -121,6 +121,8 @@ router.get('/users/:userId/profile', async (req, res) => {
       <meta name="twitter:description" content="${userData.description || 'No description available'}">
       ${hasVideo ? `
       <meta name="twitter:player" content="${videoUrl}">
+      <meta name="twitter:player:width" content="1280">
+      <meta name="twitter:player:height" content="720">
       ` : `
       <meta name="twitter:image" content="${avatarUrl}">
       `}
