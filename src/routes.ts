@@ -97,35 +97,16 @@ router.get('/users/:userId/profile', async (req, res) => {
 
     const statsText = encodeURIComponent(`👤 ${formattedFriends}   👥 ${formattedFollowers}   💰 ${robuxValue}   📅 ${createdYear}`);
     
-    // Check for ShortURL ID in description
-    const videoMatch = userData.description?.match(/fxrblx=([a-zA-Z0-9]+)/i);
-    const hasVideo = videoMatch && videoMatch[1];
-    const videoUrl = hasVideo ? `https://shorturl.at/${videoMatch[1]}` : null;
-    
     const metaTags = `
       <meta property="og:site_name" content="FixRoblox / Rxblox">
       <meta property="og:title" content="${userData.displayName} (@${userData.name})">
       <meta property="og:description" content="${userData.description || 'No description available'}">
-      ${hasVideo ? `
-      <meta property="og:video" content="${videoUrl}">
-      <meta property="og:video:secure_url" content="${videoUrl}">
-      <meta property="og:video:type" content="video/mp4">
-      <meta property="og:type" content="video">
-      ` : `
       <meta property="og:image" content="${avatarUrl}">
-      <meta property="og:type" content="website">
-      `}
       <meta property="og:url" content="https://www.roblox.com/users/${userId}/profile">
-      <meta name="twitter:card" content="${hasVideo ? 'player' : 'summary'}">
+      <meta name="twitter:card" content="summary">
       <meta name="twitter:title" content="${userData.displayName} (@${userData.name})">
       <meta name="twitter:description" content="${userData.description || 'No description available'}">
-      ${hasVideo ? `
-      <meta name="twitter:player" content="${videoUrl}">
-      <meta name="twitter:player:width" content="1280">
-      <meta name="twitter:player:height" content="720">
-      ` : `
       <meta name="twitter:image" content="${avatarUrl}">
-      `}
       <meta name="roblox:friends" content="${friendsData.count}">
       <meta name="roblox:followers" content="${followersData.count}">
       <link rel="alternate" href="https://rxblox.vercel.app/oembed?text=${statsText}&status=${userId}&author=${userData.name}" type="application/json+oembed" title="${userData.displayName}">
